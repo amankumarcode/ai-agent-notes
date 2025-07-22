@@ -10,9 +10,9 @@ markdown_extensions:
   - codehilite
   - pymdownx.superfences
   - pymdownx.tabbed
-docs_dir: .
+docs_dir: docs
 nav:
-  - Home: README.md
+  - Home: index.md
   - Foundations: 00_foundations/
   - Classic Agents: 01_classic_agents/
   - LLM Primer: 02_llm_primer/
