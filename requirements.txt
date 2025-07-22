@@ -1,0 +1,8 @@
+mkdocs-material>=9.5
+mkdocs-with-pdf
+mermaid-cli
+pre-commit
+black
+isort
+mdformat
+nbconvert

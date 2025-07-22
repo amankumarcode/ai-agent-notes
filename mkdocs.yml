@@ -1,0 +1,25 @@
+site_name: AI-Agent Notes
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.instant
+    - navigation.footer
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed
+docs_dir: .
+nav:
+  - Home: README.md
+  - Foundations: 00_foundations/
+  - Classic Agents: 01_classic_agents/
+  - LLM Primer: 02_llm_primer/
+  - Transformers: 03_transformers/
+  - Agent Patterns: 04_agent_patterns/
+  - Multi-Agent: 05_multi_agent/
+  - RAG & Memory: 06_rag_and_memory/
+  - Daily Logs: daily_logs/
+plugins:
+  - with-pdf
