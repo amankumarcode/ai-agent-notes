@@ -5,15 +5,44 @@ theme:
   features:
     - navigation.instant
     - navigation.footer
+    - content.code.copy
+    - content.tabs.link
+
 markdown_extensions:
   - admonition
   - codehilite
-  - pymdownx.superfences
-  - pymdownx.tabbed
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - tables
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js
+  - javascripts/extra.js
+
+extra_css:
+  - https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css
+
 docs_dir: docs
 nav:
   - Home: index.md
-  - Foundations: 00_foundations/
+  - Foundations: 
+      - Linear Algebra: 00_foundations/linear_algebra.md
   - Classic Agents: 01_classic_agents/
   - LLM Primer: 02_llm_primer/
   - Transformers: 03_transformers/
@@ -21,5 +50,7 @@ nav:
   - Multi-Agent: 05_multi_agent/
   - RAG & Memory: 06_rag_and_memory/
   - Daily Logs: daily_logs/
+
 plugins:
-  - with-pdf
+  - search
+  # - with-pdf  # Temporarily disabled for testing
