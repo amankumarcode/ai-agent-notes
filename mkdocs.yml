@@ -45,6 +45,7 @@ nav:
       - Linear Algebra: 00_foundations/linear_algebra.md
   - Classic Agents: 
     - Simple Reflex Agents: 01_classic_agents/reflex_agents.md
+    - Model-Based Reflex Agents: 01_classic_agents/model_based_reflex_agent.md
   - LLM Primer: 02_llm_primer/
   - Transformers: 03_transformers/
   - Agent Patterns: 04_agent_patterns/
