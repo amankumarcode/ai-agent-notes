@@ -51,6 +51,8 @@ nav:
   - Agent Patterns: 04_agent_patterns/
   - Multi-Agent: 05_multi_agent/
   - RAG & Memory: 06_rag_and_memory/
+  - Deep Learning:
+    - Backpropagation: 07_deep_learning/backprop.md
   - Daily Logs: daily_logs/
 
 plugins:
