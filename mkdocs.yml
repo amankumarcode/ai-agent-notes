@@ -53,6 +53,7 @@ nav:
   - RAG & Memory: 06_rag_and_memory/
   - Deep Learning:
     - Backpropagation: 07_deep_learning/backprop.md
+    - Autograd: 07_deep_learning/autograd.md
   - Daily Logs: daily_logs/
 
 plugins:
