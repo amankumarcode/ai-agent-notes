@@ -1,0 +1,2031 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../reflex_agents/">
+      
+      
+        <link rel="next" href="../../07_deep_learning/backprop/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Model-Based Reflex Agents - AI-Agent Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model-based-reflex-agents" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI-Agent Notes" class="md-header__button md-logo" aria-label="AI-Agent Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-Agent Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Model-Based Reflex Agents
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-Agent Notes" class="md-nav__button md-logo" aria-label="AI-Agent Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-Agent Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Foundations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00_foundations/linear_algebra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linear Algebra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Classic Agents
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Classic Agents
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reflex_agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simple Reflex Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Model-Based Reflex Agents
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Model-Based Reflex Agents
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceptual-foundation-and-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conceptual Foundation and Motivation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conceptual Foundation and Motivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-memory-problem-in-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Memory Problem in Intelligence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#philosophical-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Philosophical Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-generative-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection to Generative AI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-and-information-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture and Information Flow
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture and Information Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhanced-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhanced Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-processing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Information Processing Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-with-modern-ai-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison with Modern AI Architectures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-operational-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Operational Mechanics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Operational Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-representation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Representation Strategies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-function-sophistication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update Function Sophistication
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-evolution-and-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rule Evolution and Complexity
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strengths-and-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strengths and Capabilities
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Strengths and Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-partial-observability-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Partial Observability Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-improved-efficiency-through-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Improved Efficiency Through Memory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-robustness-under-uncertainty" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Robustness Under Uncertainty
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-foundation-for-advanced-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Foundation for Advanced Architectures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Challenges
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations and Challenges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-model-accuracy-and-drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Model Accuracy and Drift
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-representational-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Representational Challenges
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-computational-overhead" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Computational Overhead
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-rule-management-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Rule Management Complexity
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-to-modern-generative-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection to Modern Generative AI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection to Modern Generative AI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-in-language-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory in Language Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieval-augmented-generation-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieval-Augmented Generation (RAG)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-augmented-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory-Augmented Architectures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-management-in-multi-modal-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Management in Multi-Modal AI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evolutionary-significance-and-future-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evolutionary Significance and Future Directions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evolutionary Significance and Future Directions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-reflex-to-reasoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      From Reflex to Reasoning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-frontiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Research Frontiers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-design-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Design Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Design Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Design Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-modern-ai-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Modern AI Pipelines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#case-studies-and-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Studies and Applications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Case Studies and Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case-study-1-conversational-ai-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study 1: Conversational AI Memory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-2-autonomous-vehicle-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study 2: Autonomous Vehicle Navigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-3-personalized-content-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study 3: Personalized Content Recommendation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q &amp; A
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-and-future-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary and Future Directions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_llm_primer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LLM Primer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transformers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_agent_patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Agent Patterns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_multi_agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multi-Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_rag_and_memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    RAG & Memory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Deep Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_deep_learning/backprop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backpropagation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_deep_learning/autograd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Autograd
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../daily_logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Daily Logs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceptual-foundation-and-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conceptual Foundation and Motivation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conceptual Foundation and Motivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-memory-problem-in-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Memory Problem in Intelligence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#philosophical-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Philosophical Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-generative-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection to Generative AI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-and-information-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture and Information Flow
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture and Information Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhanced-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhanced Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-processing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Information Processing Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-with-modern-ai-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison with Modern AI Architectures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-operational-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Operational Mechanics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Operational Mechanics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-representation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Representation Strategies
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-function-sophistication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update Function Sophistication
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-evolution-and-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rule Evolution and Complexity
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strengths-and-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strengths and Capabilities
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Strengths and Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-partial-observability-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Partial Observability Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-improved-efficiency-through-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Improved Efficiency Through Memory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-robustness-under-uncertainty" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Robustness Under Uncertainty
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-foundation-for-advanced-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Foundation for Advanced Architectures
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Challenges
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations and Challenges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-model-accuracy-and-drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Model Accuracy and Drift
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-representational-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Representational Challenges
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-computational-overhead" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Computational Overhead
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-rule-management-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Rule Management Complexity
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-to-modern-generative-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection to Modern Generative AI
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection to Modern Generative AI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-in-language-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory in Language Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieval-augmented-generation-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieval-Augmented Generation (RAG)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-augmented-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory-Augmented Architectures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-management-in-multi-modal-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Management in Multi-Modal AI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evolutionary-significance-and-future-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evolutionary Significance and Future Directions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evolutionary Significance and Future Directions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-reflex-to-reasoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      From Reflex to Reasoning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-frontiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Research Frontiers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-design-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Design Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Design Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Design Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-modern-ai-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Modern AI Pipelines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#case-studies-and-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Studies and Applications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Case Studies and Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case-study-1-conversational-ai-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study 1: Conversational AI Memory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-2-autonomous-vehicle-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study 2: Autonomous Vehicle Navigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-3-personalized-content-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study 3: Personalized Content Recommendation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q &amp; A
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-and-future-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary and Future Directions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="model-based-reflex-agents">Model-Based Reflex Agents</h1>
+<p><strong>Updated:</strong> 2025-07-24</p>
+<h2 id="tldr">TL;DR</h2>
+<ul>
+<li><strong>Adds internal state</strong>: Remembers aspects of the world that aren't in the current percept, creating a persistent memory layer</li>
+<li><strong>Maintains a world-model</strong>: Often minimal but crucial for handling partial observability and temporal dependencies</li>
+<li><strong>Decision via enhanced rules</strong>: Condition-action rules now evaluate <strong>belief state</strong> rather than raw sensory input</li>
+<li><strong>Evolutionary stepping stone</strong>: Bridges the gap between reactive behavior and deliberative reasoning</li>
+<li><strong>Modern relevance</strong>: Foundational concepts directly parallel memory mechanisms in generative AI systems</li>
+</ul>
+<hr />
+<h2 id="conceptual-foundation-and-motivation">Conceptual Foundation and Motivation</h2>
+<h3 id="the-memory-problem-in-intelligence">The Memory Problem in Intelligence</h3>
+<p>The transition from simple reflex to model-based reflex agents represents a fundamental shift in artificial intelligence architecture - the introduction of <strong>persistent internal state</strong>. This evolution mirrors a crucial insight in cognitive science: intelligent behavior often requires maintaining information about the world beyond what is immediately observable.</p>
+<p><strong>The Core Insight</strong>: Real-world environments exhibit <strong>partial observability</strong> - agents cannot perceive all relevant information simultaneously. A vacuum robot cannot see dirt in rooms it's not currently occupying. A language model cannot access information beyond its training cutoff. A recommendation system cannot observe user preferences that haven't been explicitly stated.</p>
+<h3 id="philosophical-implications">Philosophical Implications</h3>
+<p>Model-based reflex agents embody a <strong>constructivist approach</strong> to intelligence, where the agent actively builds and maintains an internal representation of reality. This contrasts with the purely reactive stance of simple reflex agents, which treat each moment as isolated from history.</p>
+<p>This architectural choice introduces profound questions that resonate throughout AI:
+- <strong>Representation</strong>: How do we encode relevant aspects of the world?
+- <strong>Updating</strong>: When and how should beliefs change?
+- <strong>Accuracy</strong>: How do we handle model-reality mismatches?
+- <strong>Scaling</strong>: What happens as internal models grow complex?</p>
+<p>These same questions drive modern research in large language models, world models, and memory-augmented neural networks.</p>
+<h3 id="connection-to-generative-ai">Connection to Generative AI</h3>
+<p>Modern generative AI systems face identical challenges. <strong>Context windows</strong> in transformers serve as explicit memory mechanisms. <strong>Retrieval-Augmented Generation (RAG)</strong> systems maintain external knowledge stores. <strong>Few-shot learning</strong> relies on conditioning models with relevant examples stored in the prompt.</p>
+<p>The model-based reflex agent's <strong>state update function</strong> directly parallels how generative models update their internal representations as they process sequential inputs. The <strong>belief state</strong> corresponds to the latent representations that language models build about conversation context, user intent, and task requirements.</p>
+<hr />
+<h2 id="architecture-and-information-flow">Architecture and Information Flow</h2>
+<h3 id="enhanced-architecture">Enhanced Architecture</h3>
+<pre class="mermaid"><code>graph TB
+    ENV[Environment] --&gt;|Percept_t| SENS[Sensors]
+    SENS --&gt; UPDATE[State Update Function]
+    UPDATE --&gt; STATE[Internal State/Belief State]
+
+    STATE --&gt; RULES[Enhanced Condition-Action Rules]
+    RULES --&gt; ACTION[Action Selection]
+    ACTION --&gt; ACTU[Actuators]
+    ACTU --&gt;|Action| ENV
+
+    STATE --&gt;|Feedback| UPDATE
+
+    subgraph "Memory Layer"
+        STATE
+        UPDATE
+    end
+
+    subgraph "Decision Layer"
+        RULES
+        ACTION
+    end
+
+    style STATE fill:#e3f2fd
+    style UPDATE fill:#e8f5e8
+    style ENV fill:#fff3e0</code></pre>
+<h3 id="information-processing-pipeline">Information Processing Pipeline</h3>
+<p><strong>1. Perception Integration</strong>
+- Current sensory input combined with stored beliefs
+- Temporal fusion of information across time steps
+- Confidence weighting of observations vs. stored beliefs</p>
+<p><strong>2. State Representation</strong>
+- <strong>Symbolic state</strong>: Discrete facts about the world (room cleanliness, object locations)
+- <strong>Metric state</strong>: Continuous variables (positions, velocities, probabilities)
+- <strong>Hybrid representations</strong>: Combining symbolic and continuous information</p>
+<p><strong>3. Update Mechanisms</strong>
+- <strong>Deterministic updates</strong>: Direct state transitions based on observations
+- <strong>Probabilistic updates</strong>: Bayesian belief revision under uncertainty
+- <strong>Temporal decay</strong>: Old information becoming less reliable over time</p>
+<p><strong>4. Rule Enhancement</strong>
+Rules now operate on enriched state rather than raw percepts:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Simple Reflex: if current_percept then action
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Model-Based: if belief_state_condition then action
+</code></pre></div></p>
+<h3 id="comparison-with-modern-ai-architectures">Comparison with Modern AI Architectures</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Model-Based Reflex</th>
+<th>Modern LLMs</th>
+<th>Generative AI Systems</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory</strong></td>
+<td>Explicit state variables</td>
+<td>Attention mechanisms + context</td>
+<td>RAG + vector databases</td>
+</tr>
+<tr>
+<td><strong>Updates</strong></td>
+<td>Deterministic functions</td>
+<td>Gradient-based learning</td>
+<td>Continuous pre-training</td>
+</tr>
+<tr>
+<td><strong>Representation</strong></td>
+<td>Hand-coded features</td>
+<td>Learned embeddings</td>
+<td>Multi-modal representations</td>
+</tr>
+<tr>
+<td><strong>Scale</strong></td>
+<td>Small, local state</td>
+<td>Billions of parameters</td>
+<td>Distributed knowledge bases</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="detailed-operational-mechanics">Detailed Operational Mechanics</h2>
+<h3 id="state-representation-strategies">State Representation Strategies</h3>
+<p><strong>1. Complete State Tracking</strong>
+Maintain exhaustive information about all relevant world aspects:
+- <strong>Advantages</strong>: Maximum information availability for decision-making
+- <strong>Challenges</strong>: Memory explosion, computational overhead, staleness issues
+- <strong>Generative AI Parallel</strong>: Full conversation history retention in chatbots</p>
+<p><strong>2. Selective State Maintenance</strong>
+Store only task-relevant information with intelligent forgetting:
+- <strong>Relevance filtering</strong>: Keep information likely to influence future decisions
+- <strong>Temporal prioritization</strong>: Recent information weighted more heavily
+- <strong>Importance weighting</strong>: Critical facts maintained longer
+- <strong>Generative AI Parallel</strong>: Attention mechanisms focusing on relevant tokens</p>
+<p><strong>3. Hierarchical State Organization</strong>
+Multi-level representations from detailed to abstract:
+- <strong>Operational details</strong>: Immediate sensory information and action consequences
+- <strong>Tactical summaries</strong>: Medium-term patterns and spatial relationships
+- <strong>Strategic context</strong>: Long-term goals and environmental invariants
+- <strong>Generative AI Parallel</strong>: Hierarchical prompt engineering and context compression</p>
+<h3 id="update-function-sophistication">Update Function Sophistication</h3>
+<p><strong>Basic Update Paradigms</strong>:</p>
+<p><strong>1. Overwrite Updates</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>New observations completely replace previous beliefs
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>state[&#39;room_A_clean&#39;] = current_observation
+</code></pre></div>
+- Simple but loses historical context
+- Appropriate for rapidly changing environments</p>
+<p><strong>2. Confirmatory Updates</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>New observations strengthen or weaken existing beliefs
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>confidence = update_confidence(old_belief, new_observation)
+</code></pre></div>
+- Handles sensor noise and uncertainty
+- Maintains belief stability over time</p>
+<p><strong>3. Temporal Integration</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Combine observations across time with decay factors
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>belief = decay_factor * old_belief + (1-decay_factor) * new_observation
+</code></pre></div>
+- Smooths transient fluctuations
+- Enables trend detection and prediction</p>
+<h3 id="rule-evolution-and-complexity">Rule Evolution and Complexity</h3>
+<p><strong>Enhanced Condition Evaluation</strong>:</p>
+<p><strong>1. Multi-Modal Conditions</strong>
+Rules can now evaluate complex combinations of:
+- Current sensory input
+- Historical patterns stored in state
+- Derived inferences from state combinations
+- Temporal sequences and trends</p>
+<p><strong>2. Contextual Rule Activation</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Rule priority and applicability depend on:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- Current world state context
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>- Agent&#39;s internal state (goals, resources)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>- Environmental dynamics (stable vs. changing)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>- Historical success of rule applications
+</code></pre></div></p>
+<p><strong>3. Meta-Rules for Rule Management</strong>
+Higher-order rules that govern when to:
+- Activate specific rule subsets
+- Modify rule priorities dynamically
+- Create new rules from experience
+- Retire ineffective rules</p>
+<hr />
+<h2 id="strengths-and-capabilities">Strengths and Capabilities</h2>
+<h3 id="1-partial-observability-handling">1. Partial Observability Handling</h3>
+<p><strong>Fundamental Capability</strong>: Unlike simple reflex agents, model-based agents can reason about unobserved aspects of the environment using stored information.</p>
+<p><strong>Practical Implications</strong>:
+- <strong>Spatial reasoning</strong>: Remembering layouts and object locations
+- <strong>Temporal reasoning</strong>: Tracking changes and predicting future states<br />
+- <strong>Causal reasoning</strong>: Understanding action consequences beyond immediate feedback</p>
+<p><strong>Generative AI Connection</strong>: This directly parallels how language models use context to understand references, maintain conversation coherence, and reason about implied information not explicitly stated in the current prompt.</p>
+<h3 id="2-improved-efficiency-through-memory">2. Improved Efficiency Through Memory</h3>
+<p><strong>Avoiding Redundant Exploration</strong>: Agents can avoid revisiting known states or repeating unsuccessful actions.</p>
+<p><strong>Pattern Recognition</strong>: Stored state enables detection of recurring situations and application of learned responses.</p>
+<p><strong>Predictive Capability</strong>: Historical state patterns enable anticipation of future conditions and proactive behavior.</p>
+<p><strong>Modern Parallel</strong>: RAG systems avoid re-computing answers by storing and retrieving previously processed information, dramatically improving efficiency.</p>
+<h3 id="3-robustness-under-uncertainty">3. Robustness Under Uncertainty</h3>
+<p><strong>Sensor Failure Tolerance</strong>: When current sensors fail, agents can continue operating using stored beliefs about world state.</p>
+<p><strong>Noise Resistance</strong>: Multiple observations over time can be integrated to filter out transient noise and errors.</p>
+<p><strong>Graceful Degradation</strong>: Performance decreases gradually rather than catastrophically when information becomes incomplete.</p>
+<h3 id="4-foundation-for-advanced-architectures">4. Foundation for Advanced Architectures</h3>
+<p><strong>Evolutionary Stepping Stone</strong>: Model-based reflex provides the memory infrastructure needed for:
+- Goal-based reasoning (goals stored in state)
+- Utility optimization (value functions over state)
+- Learning systems (experience stored in state)</p>
+<p><strong>Architectural Modularity</strong>: The separation of state management from decision-making enables independent optimization of memory and reasoning components.</p>
+<hr />
+<h2 id="limitations-and-challenges">Limitations and Challenges</h2>
+<h3 id="1-model-accuracy-and-drift">1. Model Accuracy and Drift</h3>
+<p><strong>The Fundamental Problem</strong>: Internal models inevitably diverge from reality over time.</p>
+<p><strong>Sources of Drift</strong>:
+- <strong>Sensor limitations</strong>: Incomplete or noisy observations
+- <strong>Environmental dynamics</strong>: Unmodeled changes in the world
+- <strong>Action uncertainty</strong>: Unexpected consequences of agent actions
+- <strong>Temporal effects</strong>: Changes occurring outside agent's observation</p>
+<p><strong>Generative AI Parallel</strong>: Language models suffer from knowledge cutoff problems, where training data becomes stale, and models cannot update their understanding of evolving situations.</p>
+<p><strong>Mitigation Strategies</strong>:
+- Regular state validation against observations
+- Confidence tracking for different state components
+- Periodic state reset and re-initialization
+- Uncertainty quantification and propagation</p>
+<h3 id="2-representational-challenges">2. Representational Challenges</h3>
+<p><strong>Feature Selection Problem</strong>: Determining what aspects of the world to store in state.</p>
+<p><strong>Abstraction Level</strong>: Choosing appropriate granularity for state representation.</p>
+<p><strong>Representation Language</strong>: Selecting suitable formalisms for encoding world knowledge.</p>
+<p><strong>Scalability Issues</strong>: State space grows exponentially with environment complexity.</p>
+<p><strong>Modern Relevance</strong>: These same challenges appear in:
+- Designing vector embeddings for RAG systems
+- Choosing context compression strategies for LLMs
+- Selecting features for multimodal AI systems</p>
+<h3 id="3-computational-overhead">3. Computational Overhead</h3>
+<p><strong>Memory Management</strong>: Storing and updating state requires computational resources.</p>
+<p><strong>State Space Search</strong>: More complex conditions require more expensive rule evaluation.</p>
+<p><strong>Update Complexity</strong>: Sophisticated state update functions can become computational bottlenecks.</p>
+<p><strong>Trade-off Analysis</strong>: 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Benefits: Improved decision quality, partial observability handling
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Costs: Memory usage, computational overhead, implementation complexity
+</code></pre></div></p>
+<h3 id="4-rule-management-complexity">4. Rule Management Complexity</h3>
+<p><strong>Rule Explosion</strong>: Rich state representations enable more complex conditions, leading to larger rule sets.</p>
+<p><strong>Rule Interaction</strong>: State-dependent rules can interact in unexpected ways.</p>
+<p><strong>Maintenance Burden</strong>: Updating and debugging rules becomes more difficult with complex state.</p>
+<p><strong>Consistency Challenges</strong>: Ensuring rule sets remain coherent as state representation evolves.</p>
+<hr />
+<h2 id="connection-to-modern-generative-ai">Connection to Modern Generative AI</h2>
+<h3 id="memory-in-language-models">Memory in Language Models</h3>
+<p><strong>Context Windows as State</strong>: Modern transformers maintain information through attention mechanisms that function analogously to model-based reflex state:</p>
+<ul>
+<li><strong>Token sequences</strong> serve as explicit memory traces</li>
+<li><strong>Attention weights</strong> implement selective state access</li>
+<li><strong>Positional encodings</strong> provide temporal organization</li>
+<li><strong>Layer activations</strong> maintain hierarchical state representations</li>
+</ul>
+<p><strong>Limitations Parallel</strong>: Just as model-based reflex agents face state explosion, language models face context length limitations that constrain their ability to maintain extended state.</p>
+<h3 id="retrieval-augmented-generation-rag">Retrieval-Augmented Generation (RAG)</h3>
+<p><strong>External State Management</strong>: RAG systems implement distributed model-based reflex architectures:</p>
+<pre class="mermaid"><code>graph LR
+    QUERY[User Query] --&gt; RETRIEVE[State Retrieval]
+    RETRIEVE --&gt; CONTEXT[Context Assembly]
+    CONTEXT --&gt; LLM[Language Model]
+    LLM --&gt; RESPONSE[Generated Response]
+
+    RETRIEVE --&gt; VECTORDB[(Vector Database&lt;br/&gt;External State)]
+    CONTEXT --&gt; MEMORY[Working Memory&lt;br/&gt;Internal State]</code></pre>
+<p><strong>State Update in RAG</strong>:
+- <strong>Indexing</strong>: New information added to external knowledge base
+- <strong>Retrieval</strong>: Relevant state components accessed based on current query
+- <strong>Fusion</strong>: External state combined with model's internal representations
+- <strong>Response Generation</strong>: Action selection based on enriched state</p>
+<h3 id="memory-augmented-architectures">Memory-Augmented Architectures</h3>
+<p><strong>Neural Turing Machines and Differentiable Memory</strong>: 
+Modern architectures implement learnable versions of model-based reflex state management:</p>
+<ul>
+<li><strong>External memory matrices</strong> serve as differentiable state storage</li>
+<li><strong>Read/write mechanisms</strong> implement learnable state update functions</li>
+<li><strong>Controller networks</strong> implement state-dependent rule evaluation</li>
+<li><strong>Attention mechanisms</strong> enable selective state access</li>
+</ul>
+<p><strong>Episodic Memory Systems</strong>:
+- Store specific interaction episodes for later retrieval
+- Enable few-shot learning through relevant experience replay
+- Support personalization through user-specific memory
+- Handle temporal reasoning through episodic sequences</p>
+<h3 id="state-management-in-multi-modal-ai">State Management in Multi-Modal AI</h3>
+<p><strong>Cross-Modal State Integration</strong>: 
+Modern AI systems must maintain state across multiple modalities:</p>
+<ul>
+<li><strong>Visual state</strong>: Object locations, scene understanding, temporal changes</li>
+<li><strong>Linguistic state</strong>: Conversation context, semantic relationships, pragmatic information</li>
+<li><strong>Behavioral state</strong>: User preferences, interaction patterns, goal inferences</li>
+<li><strong>Task state</strong>: Current objectives, progress tracking, constraint satisfaction</li>
+</ul>
+<p>This mirrors the multi-faceted state representations required in complex model-based reflex agents.</p>
+<hr />
+<h2 id="evolutionary-significance-and-future-directions">Evolutionary Significance and Future Directions</h2>
+<h3 id="from-reflex-to-reasoning">From Reflex to Reasoning</h3>
+<p><strong>Architectural Evolution</strong>: Model-based reflex agents represent a crucial evolutionary step:</p>
+<ol>
+<li><strong>Simple Reflex</strong>: Stimulus → Response</li>
+<li><strong>Model-Based Reflex</strong>: (Stimulus + Memory) → Response  </li>
+<li><strong>Goal-Based</strong>: (Stimulus + Memory + Goals) → Planning → Response</li>
+<li><strong>Utility-Based</strong>: (Stimulus + Memory + Utility Function) → Optimization → Response</li>
+<li><strong>Learning Agents</strong>: All above + Experience → Improved Performance</li>
+</ol>
+<p><strong>Generative AI Trajectory</strong>: 
+- <strong>Early models</strong>: Pattern matching and completion
+- <strong>Context-aware models</strong>: Maintaining conversation state
+- <strong>Goal-oriented models</strong>: Task-specific optimization
+- <strong>Agent-based models</strong>: Multi-step reasoning and tool use</p>
+<h3 id="research-frontiers">Research Frontiers</h3>
+<p><strong>1. Adaptive State Representations</strong>
+- Learning optimal state abstractions from experience
+- Dynamic state compression and expansion
+- Meta-learning for state representation design</p>
+<p><strong>2. Distributed State Management</strong>
+- Multi-agent coordination through shared state
+- Federated learning with privacy-preserving state updates
+- Blockchain-based state consistency in distributed systems</p>
+<p><strong>3. Continual State Evolution</strong>
+- Lifelong learning with evolving state representations
+- Catastrophic forgetting prevention in state updates
+- Online adaptation of state management strategies</p>
+<p><strong>4. Neurosymbolic Integration</strong>
+- Combining neural and symbolic state representations
+- Interpretable state evolution for explainable AI
+- Hybrid reasoning over symbolic and distributed state</p>
+<hr />
+<h2 id="practical-design-considerations">Practical Design Considerations</h2>
+<h3 id="state-design-principles">State Design Principles</h3>
+<p><strong>1. Minimality Principle</strong>
+Store only information that influences future decisions:
+- Avoid redundant state components
+- Regular pruning of irrelevant information
+- Efficient state compression techniques</p>
+<p><strong>2. Accessibility Principle</strong>
+Ensure stored information can be effectively utilized:
+- Appropriate abstraction levels for rule evaluation
+- Efficient indexing and retrieval mechanisms
+- Clear interfaces between state and reasoning components</p>
+<p><strong>3. Consistency Principle</strong>
+Maintain coherent internal world models:
+- Conflict resolution mechanisms for contradictory information
+- Integrity constraints on state updates
+- Validation procedures for state consistency</p>
+<p><strong>4. Adaptability Principle</strong>
+Enable state representation evolution over time:
+- Modular state architectures
+- Version control for state schemas
+- Migration strategies for representation changes</p>
+<h3 id="integration-with-modern-ai-pipelines">Integration with Modern AI Pipelines</h3>
+<p><strong>Hybrid Architectures</strong>: Combining model-based reflex with neural networks:
+- State preprocessing for neural network inputs
+- Neural network outputs updating symbolic state
+- Attention mechanisms guided by symbolic state structure</p>
+<p><strong>Explainable AI</strong>: Leveraging explicit state for transparency:
+- State-based explanation generation
+- Interpretable state evolution traces
+- User-friendly state visualization</p>
+<p><strong>Safety and Reliability</strong>: Using explicit state for system safety:
+- State-based invariant checking
+- Formal verification of state update functions
+- Anomaly detection through state analysis</p>
+<hr />
+<h2 id="case-studies-and-applications">Case Studies and Applications</h2>
+<h3 id="case-study-1-conversational-ai-memory">Case Study 1: Conversational AI Memory</h3>
+<p><strong>Challenge</strong>: Maintaining coherent multi-turn conversations with context-dependent responses.</p>
+<p><strong>Model-Based Solution</strong>:
+- <strong>User state</strong>: Preferences, interaction history, demographic information
+- <strong>Conversation state</strong>: Topic progression, unresolved questions, emotional context
+- <strong>Task state</strong>: Current objectives, progress indicators, constraint tracking</p>
+<p><strong>Update Mechanisms</strong>:
+- Incremental context building through conversation
+- Relevance-weighted memory retention
+- Conflict resolution for contradictory user statements</p>
+<p><strong>Modern Implementation</strong>: 
+Advanced chatbots use RAG systems and conversation summarization to implement exactly this pattern at scale.</p>
+<h3 id="case-study-2-autonomous-vehicle-navigation">Case Study 2: Autonomous Vehicle Navigation</h3>
+<p><strong>Challenge</strong>: Safe navigation with partial sensor coverage and dynamic environments.</p>
+<p><strong>Model-Based Solution</strong>:
+- <strong>Spatial state</strong>: Road topology, obstacle locations, traffic patterns
+- <strong>Temporal state</strong>: Vehicle trajectories, timing patterns, prediction windows
+- <strong>Safety state</strong>: Risk assessments, emergency protocols, system health</p>
+<p><strong>Update Mechanisms</strong>:
+- Sensor fusion with uncertainty quantification
+- Predictive state evolution using physics models
+- Multi-agent coordination through shared state</p>
+<h3 id="case-study-3-personalized-content-recommendation">Case Study 3: Personalized Content Recommendation</h3>
+<p><strong>Challenge</strong>: Adapting recommendations based on long-term user behavior patterns.</p>
+<p><strong>Model-Based Solution</strong>:
+- <strong>User profile state</strong>: Interest evolution, interaction patterns, preference stability
+- <strong>Content state</strong>: Item relationships, popularity trends, content freshness
+- <strong>Context state</strong>: Session goals, device context, temporal factors</p>
+<p><strong>Update Mechanisms</strong>:
+- Implicit feedback integration
+- Temporal weighting of historical preferences
+- Cross-session state persistence</p>
+<hr />
+<h2 id="q-a">Q &amp; A</h2>
+<p><strong>Q: How does a model-based reflex agent differ from a simple reflex agent in handling partial observability?</strong><br />
+<strong>A:</strong> The key difference lies in <strong>memory and inference capability</strong>. A simple reflex agent can only respond to what it currently perceives, making it helpless when crucial information is not immediately observable. A model-based reflex agent maintains internal state that preserves information across time steps, enabling it to make informed decisions even when key environmental features are temporarily unobservable. For example, in vacuum-world, it remembers which rooms are already clean without needing to re-sense them.</p>
+<p><strong>Q: What happens if the environment becomes stochastic and the internal model becomes inaccurate?</strong><br />
+<strong>A:</strong> This is a fundamental challenge called <strong>model drift</strong>. Several mitigation strategies exist: (1) <strong>Confidence tracking</strong> - maintain uncertainty estimates for different state components, (2) <strong>Periodic validation</strong> - regularly compare predictions with observations to detect drift, (3) <strong>Adaptive updates</strong> - adjust update rates based on environmental volatility, (4) <strong>Robust rules</strong> - design decision rules that function reasonably even with imperfect state, and (5) <strong>Hybrid approaches</strong> - combine model-based reasoning with reactive fallbacks for critical situations.</p>
+<p><strong>Q: How does the state representation in model-based reflex agents relate to the context mechanisms in large language models?</strong><br />
+<strong>A:</strong> They serve remarkably similar functions. Both maintain <strong>persistent information beyond immediate input</strong> to enable coherent behavior over time. LLM context windows store conversation history and relevant facts, while model-based reflex state stores world model information. Both face similar challenges: what to remember, how long to retain information, and how to update beliefs with new observations. The key difference is scale and learning - LLMs learn representations through training, while classical agents use hand-designed state updates.</p>
+<p><strong>Q: Can model-based reflex agents learn and adapt their state representations over time?</strong><br />
+<strong>A:</strong> Classical model-based reflex agents typically use <strong>fixed state representations</strong> designed by programmers. However, modern extensions incorporate learning: (1) <strong>State space discovery</strong> - learning which features to track, (2) <strong>Update function learning</strong> - improving state transition models through experience, (3) <strong>Rule adaptation</strong> - modifying decision rules based on outcomes, and (4) <strong>Meta-learning</strong> - learning how to learn better state representations. This bridges toward more sophisticated architectures like reinforcement learning agents.</p>
+<p><strong>Q: What are the computational trade-offs between state complexity and decision quality?</strong><br />
+<strong>A:</strong> There's a fundamental <strong>memory-computation-performance triangle</strong>. Richer state representations generally enable better decisions but at higher computational cost. Key trade-offs include: (1) <strong>State storage overhead</strong> - memory requirements grow with state complexity, (2) <strong>Update computation</strong> - more sophisticated state updates require more processing, (3) <strong>Rule evaluation cost</strong> - complex conditions over rich state are more expensive to evaluate, and (4) <strong>Diminishing returns</strong> - beyond a certain point, additional state provides minimal decision improvement. The optimal balance depends on domain requirements and computational constraints.</p>
+<p><strong>Q: How do model-based reflex agents handle conflicting information from different sources?</strong><br />
+<strong>A:</strong> <strong>Conflict resolution</strong> is crucial for maintaining coherent state. Common strategies include: (1) <strong>Source reliability weighting</strong> - trust more reliable information sources, (2) <strong>Temporal prioritization</strong> - newer information typically overrides older data, (3) <strong>Consistency checking</strong> - detect and flag contradictory information, (4) <strong>Uncertainty propagation</strong> - maintain confidence levels and propagate uncertainty through reasoning, and (5) <strong>Multi-hypothesis tracking</strong> - maintain multiple possible world states when conflicts cannot be resolved. Modern AI systems like RAG implement similar conflict resolution mechanisms when integrating information from multiple retrieved documents.</p>
+<p><strong>Q: What is the relationship between model-based reflex agents and the concept of "system prompts" in generative AI?</strong><br />
+<strong>A:</strong> System prompts function as <strong>initial state configuration</strong> for generative AI systems, much like the initial state setup in model-based reflex agents. Both establish the operational context, constraints, and behavioral guidelines that influence all subsequent decisions. System prompts can be viewed as a form of persistent state that remains active throughout an interaction session, similar to how model-based agents maintain state across multiple perception-action cycles. The key difference is that traditional agents update state through explicit functions, while LLMs update their "state" (context) through attention mechanisms and prompt engineering.</p>
+<p><strong>Q: How do we validate that a model-based reflex agent's internal state accurately reflects the real world?</strong><br />
+<strong>A:</strong> <strong>State validation</strong> requires multi-faceted approaches: (1) <strong>Prediction testing</strong> - compare agent's state-based predictions with actual observations, (2) <strong>Consistency checking</strong> - verify internal logical consistency of state components, (3) <strong>Benchmark comparison</strong> - test against known ground truth scenarios, (4) <strong>Robustness analysis</strong> - evaluate performance under various model inaccuracy conditions, (5) <strong>Observability analysis</strong> - determine which state components can be verified through sensing, and (6) <strong>Simulation validation</strong> - test state accuracy in controlled environments before real-world deployment. This parallels challenges in validating the factual accuracy of knowledge stored in large language models.</p>
+<hr />
+<h2 id="summary-and-future-directions">Summary and Future Directions</h2>
+<p>Model-based reflex agents represent a <strong>fundamental architectural evolution</strong> in artificial intelligence - the transition from purely reactive behavior to memory-augmented decision-making. This evolution presaged many of the core challenges and solutions that define modern AI systems.</p>
+<p><strong>Key Insights</strong>:</p>
+<ol>
+<li><strong>Memory enables intelligence</strong>: The ability to maintain and utilize information beyond immediate perception is crucial for sophisticated behavior</li>
+<li><strong>State representation matters</strong>: How we encode and organize memory fundamentally determines what kinds of reasoning become possible</li>
+<li><strong>Update mechanisms are critical</strong>: The quality of memory depends not just on what we store, but how we maintain and modify stored information</li>
+<li><strong>Scalability challenges persist</strong>: The transition from simple to complex internal models introduces computational and design challenges that remain active research areas</li>
+</ol>
+<p><strong>Modern Relevance</strong>: The principles underlying model-based reflex agents directly inform contemporary AI architectures. Context windows in transformers, retrieval mechanisms in RAG systems, and memory modules in neural networks all implement sophisticated versions of the basic model-based reflex pattern.</p>
+<p><strong>Future Directions</strong>: The evolution continues toward more adaptive, learnable, and scalable memory mechanisms. Understanding the foundations provided by model-based reflex agents offers crucial insights for designing the next generation of AI systems that must maintain coherent behavior across extended interactions and complex, partially observable environments.</p>
+<p>The journey from simple reflex to model-based reflex agents illustrates a timeless principle in AI: <strong>intelligence emerges not just from sophisticated reasoning, but from the thoughtful integration of memory, perception, and action over time</strong>.</p>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../reflex_agents/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Simple Reflex Agents">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Simple Reflex Agents
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../07_deep_learning/backprop/" class="md-footer__link md-footer__link--next" aria-label="Next: Backpropagation">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Backpropagation
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.footer", "content.code.copy", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2180 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../01_classic_agents/model_based_reflex_agent/">
+      
+      
+        <link rel="next" href="../autograd/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Backpropagation - AI-Agent Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#backpropagation-theory-implementation-and-modern-perspectives" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI-Agent Notes" class="md-header__button md-logo" aria-label="AI-Agent Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-Agent Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Backpropagation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-Agent Notes" class="md-nav__button md-logo" aria-label="AI-Agent Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-Agent Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Foundations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00_foundations/linear_algebra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linear Algebra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Classic Agents
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Classic Agents
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_classic_agents/reflex_agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simple Reflex Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_classic_agents/model_based_reflex_agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Model-Based Reflex Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_llm_primer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LLM Primer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transformers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_agent_patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Agent Patterns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_multi_agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multi-Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_rag_and_memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    RAG & Memory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Deep Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Backpropagation
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backpropagation
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Foundation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mathematical Foundation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-chain-rule-and-multivariate-calculus" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Chain Rule and Multivariate Calculus
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-graph-perspective" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Graph Perspective
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notation-and-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notation and Conventions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprehensive-gradient-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Gradient Derivation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comprehensive Gradient Derivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-backpropagation-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Backpropagation Equations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detailed-mathematical-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Mathematical Derivation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#computational-graph-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Graph Theory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Computational Graph Theory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#graph-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Graph Representation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forward-and-backward-pass-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forward and Backward Pass Algorithms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-complexity-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Complexity Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-worked-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Worked Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Worked Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-two-layer-network-with-specific-activations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Two-Layer Network with Specific Activations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-batch-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Batch Processing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-differentiation-and-modern-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatic Differentiation and Modern Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automatic Differentiation and Modern Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forward-mode-vs-reverse-mode-ad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forward-Mode vs. Reverse-Mode AD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytorch-implementation-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      PyTorch Implementation Deep Dive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-graph-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Graph Construction
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-topics-and-optimizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Topics and Optimizations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Topics and Optimizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-efficient-backpropagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory-Efficient Backpropagation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numerical-stability-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numerical Stability Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#second-order-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Second-Order Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beyond-standard-backpropagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Beyond Standard Backpropagation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Beyond Standard Backpropagation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#higher-order-derivatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Higher-Order Derivatives
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#differentiable-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      Differentiable Programming
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meta-learning-and-maml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Meta-Learning and MAML
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-considerations-and-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Considerations and Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Considerations and Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debugging-gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debugging Gradients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-pitfalls-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Pitfalls and Solutions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-to-modern-ai-and-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection to Modern AI and Agents
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection to Modern AI and Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backpropagation-in-generative-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backpropagation in Generative AI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradient-based-optimization-in-ai-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gradient-Based Optimization in AI Agents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-device-learning-and-adaptation" class="md-nav__link">
+    <span class="md-ellipsis">
+      On-Device Learning and Adaptation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q &amp; A
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-and-future-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary and Future Directions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autograd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Autograd
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../daily_logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Daily Logs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Foundation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mathematical Foundation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-chain-rule-and-multivariate-calculus" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Chain Rule and Multivariate Calculus
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-graph-perspective" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Graph Perspective
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notation-and-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notation and Conventions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprehensive-gradient-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Gradient Derivation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comprehensive Gradient Derivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-backpropagation-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Backpropagation Equations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detailed-mathematical-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Mathematical Derivation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#computational-graph-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Graph Theory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Computational Graph Theory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#graph-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Graph Representation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forward-and-backward-pass-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forward and Backward Pass Algorithms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-complexity-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Complexity Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-worked-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Worked Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed Worked Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-two-layer-network-with-specific-activations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Two-Layer Network with Specific Activations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-batch-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Batch Processing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-differentiation-and-modern-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automatic Differentiation and Modern Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automatic Differentiation and Modern Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forward-mode-vs-reverse-mode-ad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forward-Mode vs. Reverse-Mode AD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytorch-implementation-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      PyTorch Implementation Deep Dive
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-graph-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Graph Construction
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-topics-and-optimizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Topics and Optimizations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Topics and Optimizations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-efficient-backpropagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory-Efficient Backpropagation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numerical-stability-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numerical Stability Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#second-order-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Second-Order Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beyond-standard-backpropagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Beyond Standard Backpropagation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Beyond Standard Backpropagation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#higher-order-derivatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Higher-Order Derivatives
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#differentiable-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      Differentiable Programming
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meta-learning-and-maml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Meta-Learning and MAML
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-considerations-and-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Considerations and Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Considerations and Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debugging-gradients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debugging Gradients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-pitfalls-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Pitfalls and Solutions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-to-modern-ai-and-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection to Modern AI and Agents
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection to Modern AI and Agents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backpropagation-in-generative-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backpropagation in Generative AI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradient-based-optimization-in-ai-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gradient-Based Optimization in AI Agents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on-device-learning-and-adaptation" class="md-nav__link">
+    <span class="md-ellipsis">
+      On-Device Learning and Adaptation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q &amp; A
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-and-future-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary and Future Directions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="backpropagation-theory-implementation-and-modern-perspectives">Backpropagation: Theory, Implementation, and Modern Perspectives</h1>
+<p><strong>Updated:</strong> 2025-07-25</p>
+<h2 id="tldr">TL;DR</h2>
+<ul>
+<li><strong>Backprop = systematic chain-rule application</strong> that transforms forward computation into exact parameter gradients</li>
+<li><strong>Computational efficiency</strong>: Computes gradients for all parameters in time proportional to one forward pass</li>
+<li><strong>Foundation of deep learning</strong>: Enables training of arbitrarily deep networks through exact gradient computation</li>
+<li><strong>Modern implementation</strong>: Automatic differentiation systems (PyTorch, JAX, TensorFlow) implement identical mathematics with sophisticated optimizations</li>
+<li><strong>Beyond basic training</strong>: Enables gradient-based optimization, meta-learning, and differentiable programming paradigms</li>
+</ul>
+<hr />
+<h2 id="mathematical-foundation">Mathematical Foundation</h2>
+<h3 id="the-chain-rule-and-multivariate-calculus">The Chain Rule and Multivariate Calculus</h3>
+<p>Backpropagation is fundamentally an efficient implementation of the <strong>multivariate chain rule</strong> for computing gradients in composite functions. For a neural network, we have a composition of functions:</p>
+<div class="arithmatex">\[f(\mathbf{x}) = f_L \circ f_{L-1} \circ \cdots \circ f_1(\mathbf{x})\]</div>
+<p>where each <span class="arithmatex">\(f_i\)</span> represents a layer transformation. The chain rule tells us:</p>
+<div class="arithmatex">\[\frac{\partial \mathcal{L}}{\partial \mathbf{x}} = \frac{\partial \mathcal{L}}{\partial f_L} \cdot \frac{\partial f_L}{\partial f_{L-1}} \cdots \frac{\partial f_2}{\partial f_1} \cdot \frac{\partial f_1}{\partial \mathbf{x}}\]</div>
+<p><strong>Key Insight</strong>: Rather than computing this product left-to-right (forward-mode), backpropagation computes right-to-left (reverse-mode), which is dramatically more efficient for the typical case where we have many parameters but few outputs.</p>
+<h3 id="computational-graph-perspective">Computational Graph Perspective</h3>
+<p>Every neural network computation can be represented as a <strong>directed acyclic graph (DAG)</strong> where:
+- <strong>Nodes</strong> represent variables (inputs, parameters, intermediate values, outputs)
+- <strong>Edges</strong> represent computational dependencies
+- <strong>Operations</strong> are functions that transform inputs to outputs</p>
+<p><strong>Forward Pass</strong>: Evaluates the graph from inputs to outputs
+<strong>Backward Pass</strong>: Propagates gradients from outputs back to inputs using the chain rule</p>
+<h3 id="notation-and-conventions">Notation and Conventions</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Dimensions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\mathbf{a}^{(l)}\)</span></td>
+<td>Activation vector at layer <span class="arithmatex">\(l\)</span></td>
+<td><span class="arithmatex">\((n_l,)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathbf{W}^{(l)}\)</span></td>
+<td>Weight matrix for layer <span class="arithmatex">\(l\)</span></td>
+<td><span class="arithmatex">\((n_l, n_{l-1})\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathbf{b}^{(l)}\)</span></td>
+<td>Bias vector for layer <span class="arithmatex">\(l\)</span></td>
+<td><span class="arithmatex">\((n_l,)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathbf{z}^{(l)}\)</span></td>
+<td>Pre-activation at layer <span class="arithmatex">\(l\)</span></td>
+<td><span class="arithmatex">\((n_l,)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\sigma(\cdot)\)</span></td>
+<td>Element-wise activation function</td>
+<td>-</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\boldsymbol{\delta}^{(l)}\)</span></td>
+<td>Error signal at layer <span class="arithmatex">\(l\)</span></td>
+<td><span class="arithmatex">\((n_l,)\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\mathcal{L}\)</span></td>
+<td>Loss function</td>
+<td>scalar</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Layer Computation</strong>:
+<span class="arithmatex">\(<span class="arithmatex">\(\mathbf{z}^{(l)} = \mathbf{W}^{(l)} \mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}\)</span>\)</span>
+<span class="arithmatex">\(<span class="arithmatex">\(\mathbf{a}^{(l)} = \sigma(\mathbf{z}^{(l)})\)</span>\)</span></p>
+<hr />
+<h2 id="comprehensive-gradient-derivation">Comprehensive Gradient Derivation</h2>
+<h3 id="core-backpropagation-equations">Core Backpropagation Equations</h3>
+<p>The backpropagation algorithm computes gradients through systematic application of the chain rule. The key quantities are the <strong>error signals</strong> <span class="arithmatex">\(\boldsymbol{\delta}^{(l)}\)</span>:</p>
+<div class="arithmatex">\[\boldsymbol{\delta}^{(l)} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(l)}}\]</div>
+<p><strong>Output Layer</strong> (layer <span class="arithmatex">\(L\)</span>):
+<span class="arithmatex">\(<span class="arithmatex">\(\boldsymbol{\delta}^{(L)} = \frac{\partial \mathcal{L}}{\partial \mathbf{a}^{(L)}} \odot \sigma'(\mathbf{z}^{(L)})\)</span>\)</span></p>
+<p><strong>Hidden Layers</strong> (layers <span class="arithmatex">\(l = L-1, L-2, \ldots, 1\)</span>):
+<span class="arithmatex">\(<span class="arithmatex">\(\boldsymbol{\delta}^{(l)} = \left((\mathbf{W}^{(l+1)})^T \boldsymbol{\delta}^{(l+1)}\right) \odot \sigma'(\mathbf{z}^{(l)})\)</span>\)</span></p>
+<p><strong>Parameter Gradients</strong>:
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)} (\mathbf{a}^{(l-1)})^T\)</span>\)</span>
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(l)}} = \boldsymbol{\delta}^{(l)}\)</span>\)</span></p>
+<p>where <span class="arithmatex">\(\odot\)</span> denotes element-wise multiplication (Hadamard product).</p>
+<h3 id="detailed-mathematical-derivation">Detailed Mathematical Derivation</h3>
+<p><strong>Step 1: Output Layer Error</strong></p>
+<p>For the output layer, we start with the loss function. For mean squared error:
+<span class="arithmatex">\(<span class="arithmatex">\(\mathcal{L} = \frac{1}{2}\|\mathbf{a}^{(L)} - \mathbf{y}\|^2\)</span>\)</span></p>
+<p>The gradient with respect to output activations:
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial \mathbf{a}^{(L)}} = \mathbf{a}^{(L)} - \mathbf{y}\)</span>\)</span></p>
+<p>Using the chain rule:
+<span class="arithmatex">\(<span class="arithmatex">\(\boldsymbol{\delta}^{(L)} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(L)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{a}^{(L)}} \frac{\partial \mathbf{a}^{(L)}}{\partial \mathbf{z}^{(L)}} = (\mathbf{a}^{(L)} - \mathbf{y}) \odot \sigma'(\mathbf{z}^{(L)})\)</span>\)</span></p>
+<p><strong>Step 2: Hidden Layer Errors</strong></p>
+<p>For hidden layer <span class="arithmatex">\(l\)</span>, the error depends on errors from all subsequent layers that receive input from layer <span class="arithmatex">\(l\)</span>:
+<span class="arithmatex">\(<span class="arithmatex">\(\boldsymbol{\delta}^{(l)} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(l)}} = \sum_{j} \frac{\partial \mathcal{L}}{\partial z_j^{(l+1)}} \frac{\partial z_j^{(l+1)}}{\partial \mathbf{z}^{(l)}}\)</span>\)</span></p>
+<p>Since <span class="arithmatex">\(z_j^{(l+1)} = \sum_i W_{ji}^{(l+1)} a_i^{(l)} + b_j^{(l+1)}\)</span> and <span class="arithmatex">\(a_i^{(l)} = \sigma(z_i^{(l)})\)</span>:
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{\partial z_j^{(l+1)}}{\partial z_i^{(l)}} = W_{ji}^{(l+1)} \sigma'(z_i^{(l)})\)</span>\)</span></p>
+<p>Therefore:
+<span class="arithmatex">\(<span class="arithmatex">\(\delta_i^{(l)} = \sigma'(z_i^{(l)}) \sum_j W_{ji}^{(l+1)} \delta_j^{(l+1)}\)</span>\)</span></p>
+<p>In matrix form:
+<span class="arithmatex">\(<span class="arithmatex">\(\boldsymbol{\delta}^{(l)} = \left((\mathbf{W}^{(l+1)})^T \boldsymbol{\delta}^{(l+1)}\right) \odot \sigma'(\mathbf{z}^{(l)})\)</span>\)</span></p>
+<p><strong>Step 3: Parameter Gradients</strong></p>
+<p>For weights:
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial W_{ij}^{(l)}} = \frac{\partial \mathcal{L}}{\partial z_i^{(l)}} \frac{\partial z_i^{(l)}}{\partial W_{ij}^{(l)}} = \delta_i^{(l)} a_j^{(l-1)}\)</span>\)</span></p>
+<p>In matrix form:
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)} (\mathbf{a}^{(l-1)})^T\)</span>\)</span></p>
+<p>For biases:
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial b_i^{(l)}} = \frac{\partial \mathcal{L}}{\partial z_i^{(l)}} \frac{\partial z_i^{(l)}}{\partial b_i^{(l)}} = \delta_i^{(l)} \cdot 1 = \delta_i^{(l)}\)</span>\)</span></p>
+<hr />
+<h2 id="computational-graph-theory">Computational Graph Theory</h2>
+<h3 id="graph-representation">Graph Representation</h3>
+<pre class="mermaid"><code>graph TD
+    X[Input: x] --&gt; W1[Weight W¹]
+    B1[Bias b¹] --&gt; Z1[z¹ = W¹x + b¹]
+    W1 --&gt; Z1
+    Z1 --&gt; A1[a¹ = σ(z¹)]
+    A1 --&gt; W2[Weight W²]
+    B2[Bias b²] --&gt; Z2[z² = W²a¹ + b²]
+    W2 --&gt; Z2
+    Z2 --&gt; Y[ŷ = z²]
+    Y --&gt; L[Loss = ℒ(ŷ,y)]
+    TARGET[Target: y] --&gt; L
+
+    style L fill:#ffcdd2
+    style X fill:#e8f5e8
+    style TARGET fill:#e8f5e8</code></pre>
+<h3 id="forward-and-backward-pass-algorithms">Forward and Backward Pass Algorithms</h3>
+<p><strong>Forward Pass Algorithm</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>1. Initialize: a⁽⁰⁾ = x (input)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>2. For l = 1 to L:
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   - Compute z⁽ˡ⁾ = W⁽ˡ⁾a⁽ˡ⁻¹⁾ + b⁽ˡ⁾
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>   - Compute a⁽ˡ⁾ = σ(z⁽ˡ⁾)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   - Store z⁽ˡ⁾ and a⁽ˡ⁾ for backward pass
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>3. Compute loss: ℒ = loss_function(a⁽ᴸ⁾, y)
+</code></pre></div></p>
+<p><strong>Backward Pass Algorithm</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Initialize: δ⁽ᴸ⁾ = ∂ℒ/∂a⁽ᴸ⁾ ⊙ σ&#39;(z⁽ᴸ⁾)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. For l = L to 1:
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>   - Compute parameter gradients:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>     ∂ℒ/∂W⁽ˡ⁾ = δ⁽ˡ⁾(a⁽ˡ⁻¹⁾)ᵀ
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>     ∂ℒ/∂b⁽ˡ⁾ = δ⁽ˡ⁾
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   - If l &gt; 1: δ⁽ˡ⁻¹⁾ = ((W⁽ˡ⁾)ᵀδ⁽ˡ⁾) ⊙ σ&#39;(z⁽ˡ⁻¹⁾)
+</code></pre></div></p>
+<h3 id="computational-complexity-analysis">Computational Complexity Analysis</h3>
+<p><strong>Time Complexity</strong>:
+- <strong>Forward pass</strong>: <span class="arithmatex">\(O(\sum_{l=1}^{L} n_l \cdot n_{l-1})\)</span> where <span class="arithmatex">\(n_l\)</span> is the number of neurons in layer <span class="arithmatex">\(l\)</span>
+- <strong>Backward pass</strong>: <span class="arithmatex">\(O(\sum_{l=1}^{L} n_l \cdot n_{l-1})\)</span> (same as forward pass)
+- <strong>Total</strong>: <span class="arithmatex">\(O(2 \sum_{l=1}^{L} n_l \cdot n_{l-1})\)</span> ≈ 2× forward pass cost</p>
+<p><strong>Space Complexity</strong>:
+- <strong>Parameters</strong>: <span class="arithmatex">\(O(\sum_{l=1}^{L} n_l \cdot n_{l-1})\)</span>
+- <strong>Activations</strong> (stored for backprop): <span class="arithmatex">\(O(\sum_{l=1}^{L} n_l \cdot \text{batch\_size})\)</span>
+- <strong>Gradients</strong>: Same as parameters</p>
+<p><strong>Key Insight</strong>: The computational cost of computing gradients for all parameters is only about twice the cost of a forward pass, regardless of the number of parameters. This is the fundamental efficiency that makes training deep networks feasible.</p>
+<hr />
+<h2 id="detailed-worked-examples">Detailed Worked Examples</h2>
+<h3 id="example-1-two-layer-network-with-specific-activations">Example 1: Two-Layer Network with Specific Activations</h3>
+<p><strong>Network Architecture</strong>:
+- Input: <span class="arithmatex">\(x \in \mathbb{R}\)</span>
+- Hidden layer: 1 neuron with ReLU activation
+- Output layer: 1 neuron with linear activation
+- Loss: Mean squared error</p>
+<p><strong>Parameters</strong>:
+- <span class="arithmatex">\(w_1 = 0.5\)</span>, <span class="arithmatex">\(b_1 = 0.1\)</span> (hidden layer)
+- <span class="arithmatex">\(w_2 = 0.8\)</span>, <span class="arithmatex">\(b_2 = 0.2\)</span> (output layer)</p>
+<p><strong>Input/Target</strong>: <span class="arithmatex">\(x = 2.0\)</span>, <span class="arithmatex">\(y = 1.5\)</span></p>
+<p><strong>Forward Pass</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>z¹ = w₁x + b₁ = 0.5 × 2.0 + 0.1 = 1.1
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>a¹ = ReLU(z¹) = max(0, 1.1) = 1.1
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>z² = w₂a¹ + b₂ = 0.8 × 1.1 + 0.2 = 1.08
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ŷ = z² = 1.08
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ℒ = ½(ŷ - y)² = ½(1.08 - 1.5)² = ½(-0.42)² = 0.0882
+</code></pre></div></p>
+<p><strong>Backward Pass</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>δ² = ∂ℒ/∂z² = ŷ - y = 1.08 - 1.5 = -0.42
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>∂ℒ/∂w₂ = δ² × a¹ = -0.42 × 1.1 = -0.462
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>∂ℒ/∂b₂ = δ² = -0.42
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>δ¹ = δ² × w₂ × σ&#39;(z¹) = -0.42 × 0.8 × 1 = -0.336
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>     (σ&#39;(z¹) = 1 since z¹ &gt; 0 for ReLU)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>∂ℒ/∂w₁ = δ¹ × x = -0.336 × 2.0 = -0.672
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>∂ℒ/∂b₁ = δ¹ = -0.336
+</code></pre></div></p>
+<h3 id="example-2-batch-processing">Example 2: Batch Processing</h3>
+<p><strong>Batch of inputs</strong>: <span class="arithmatex">\(\mathbf{X} \in \mathbb{R}^{B \times d}\)</span> where <span class="arithmatex">\(B\)</span> is batch size</p>
+<p><strong>Modified Forward Pass</strong>:
+<span class="arithmatex">\(<span class="arithmatex">\(\mathbf{Z}^{(l)} = \mathbf{X} \mathbf{W}^{(l)T} + \mathbf{1}_B \mathbf{b}^{(l)T}\)</span>\)</span>
+<span class="arithmatex">\(<span class="arithmatex">\(\mathbf{A}^{(l)} = \sigma(\mathbf{Z}^{(l)})\)</span>\)</span></p>
+<p><strong>Modified Backward Pass</strong>:
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = (\mathbf{A}^{(l-1)})^T \boldsymbol{\Delta}^{(l)}\)</span>\)</span>
+<span class="arithmatex">\(<span class="arithmatex">\(\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(l)}} = \mathbf{1}_B^T \boldsymbol{\Delta}^{(l)}\)</span>\)</span></p>
+<p>where <span class="arithmatex">\(\boldsymbol{\Delta}^{(l)} \in \mathbb{R}^{B \times n_l}\)</span> contains error signals for all samples in the batch.</p>
+<hr />
+<h2 id="automatic-differentiation-and-modern-implementation">Automatic Differentiation and Modern Implementation</h2>
+<h3 id="forward-mode-vs-reverse-mode-ad">Forward-Mode vs. Reverse-Mode AD</h3>
+<p><strong>Forward-Mode Automatic Differentiation</strong>:
+- Computes gradients alongside the forward computation
+- Efficient when: number of inputs ≪ number of outputs
+- Complexity: <span class="arithmatex">\(O(n_{\text{inputs}} \times \text{forward\_cost})\)</span></p>
+<p><strong>Reverse-Mode Automatic Differentiation</strong> (Backpropagation):
+- Computes gradients by traversing computation graph backwards
+- Efficient when: number of outputs ≪ number of inputs
+- Complexity: <span class="arithmatex">\(O(n_{\text{outputs}} \times \text{forward\_cost})\)</span></p>
+<p><strong>Why Reverse-Mode for Neural Networks</strong>:
+Neural networks typically have:
+- Many parameters (inputs to the gradient computation): <span class="arithmatex">\(10^6\)</span> to <span class="arithmatex">\(10^{12}\)</span>
+- Few loss values (outputs): 1 (or a few for multi-task learning)</p>
+<p>Therefore, reverse-mode is dramatically more efficient: <span class="arithmatex">\(O(1)\)</span> vs. <span class="arithmatex">\(O(10^6)\)</span> computational cost ratio.</p>
+<h3 id="pytorch-implementation-deep-dive">PyTorch Implementation Deep Dive</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">DetailedMLP</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">):</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="c1"># Forward pass with intermediate storage</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="n">z1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>           <span class="c1"># Linear transformation</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="n">a1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">z1</span><span class="p">)</span>               <span class="c1"># ReLU activation</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="n">z2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span>          <span class="c1"># Final linear layer</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>        <span class="k">return</span> <span class="n">z2</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Example usage with gradient tracking</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="n">model</span> <span class="o">=</span> <span class="n">DetailedMLP</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Enable gradient tracking</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Forward pass</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="c1"># Backward pass</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>  <span class="c1"># Computes all gradients</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="c1"># Access gradients</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hidden weight gradients:&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">hidden</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hidden bias gradients:&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">hidden</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Output weight gradients:&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Input gradients:&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="computational-graph-construction">Computational Graph Construction</h3>
+<p><strong>Dynamic Computation Graphs</strong> (PyTorch style):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_network</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Network with variable depth based on input&quot;&quot;&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">x</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="n">weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">result</span> <span class="o">@</span> <span class="n">weight</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Computation graph built dynamically during forward pass</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">loss</span> <span class="o">=</span> <span class="n">dynamic_network</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>  <span class="c1"># Automatic differentiation on the dynamic graph</span>
+</code></pre></div></p>
+<p><strong>Static Computation Graphs</strong> (TensorFlow 1.x style):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Conceptual representation - TensorFlow 2.x uses eager execution</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">static_network</span><span class="p">():</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Pre-defined computation graph&quot;&quot;&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">W1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="n">W2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="n">h</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">W1</span><span class="p">))</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="n">output</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">W2</span><span class="p">)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">output</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Graph must be defined before execution</span>
+</code></pre></div></p>
+<hr />
+<h2 id="advanced-topics-and-optimizations">Advanced Topics and Optimizations</h2>
+<h3 id="memory-efficient-backpropagation">Memory-Efficient Backpropagation</h3>
+<p><strong>Gradient Checkpointing</strong>:
+Trade computation for memory by recomputing activations during backward pass:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch.utils.checkpoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">checkpoint</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">CheckpointedBlock</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">layers</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="c1"># Only store input and output, recompute intermediate activations</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="k">return</span> <span class="n">checkpoint</span><span class="o">.</span><span class="n">checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_forward_impl</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_forward_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>            <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>        <span class="k">return</span> <span class="n">x</span>
+</code></pre></div>
+<p><strong>Memory Usage Analysis</strong>:
+- <strong>Standard backprop</strong>: <span class="arithmatex">\(O(L \times B \times H)\)</span> memory for activations
+- <strong>Checkpointing</strong>: <span class="arithmatex">\(O(\sqrt{L} \times B \times H)\)</span> memory, <span class="arithmatex">\(O(\sqrt{L})\)</span> extra computation</p>
+<h3 id="numerical-stability-considerations">Numerical Stability Considerations</h3>
+<p><strong>Gradient Clipping</strong>:
+Prevent exploding gradients in deep networks:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">clip_gradients</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">max_norm</span><span class="p">):</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Clip gradients to prevent explosion&quot;&quot;&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">total_norm</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>            <span class="n">param_norm</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>            <span class="n">total_norm</span> <span class="o">+=</span> <span class="n">param_norm</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">total_norm</span> <span class="o">=</span> <span class="n">total_norm</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="n">clip_coef</span> <span class="o">=</span> <span class="n">max_norm</span> <span class="o">/</span> <span class="p">(</span><span class="n">total_norm</span> <span class="o">+</span> <span class="mf">1e-6</span><span class="p">)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="k">if</span> <span class="n">clip_coef</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>                <span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">mul_</span><span class="p">(</span><span class="n">clip_coef</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Activation Function Choice</strong>:
+Different activations have different gradient properties:</p>
+<table>
+<thead>
+<tr>
+<th>Activation</th>
+<th>Gradient</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sigmoid</td>
+<td><span class="arithmatex">\(\sigma(x)(1-\sigma(x))\)</span></td>
+<td>Smooth, bounded</td>
+<td>Vanishing gradients</td>
+</tr>
+<tr>
+<td>Tanh</td>
+<td><span class="arithmatex">\(1 - \tanh^2(x)\)</span></td>
+<td>Zero-centered</td>
+<td>Vanishing gradients</td>
+</tr>
+<tr>
+<td>ReLU</td>
+<td><span class="arithmatex">\(\mathbf{1}_{x&gt;0}\)</span></td>
+<td>No vanishing gradients</td>
+<td>Dead neurons</td>
+</tr>
+<tr>
+<td>GELU</td>
+<td>Complex</td>
+<td>Smooth, non-monotonic</td>
+<td>Computational overhead</td>
+</tr>
+</tbody>
+</table>
+<h3 id="second-order-optimization">Second-Order Optimization</h3>
+<p><strong>Newton's Method and Natural Gradients</strong>:
+While backpropagation computes first-order gradients, second-order methods use the Hessian:</p>
+<div class="arithmatex">\[\mathbf{H} = \frac{\partial^2 \mathcal{L}}{\partial \boldsymbol{\theta}^2}\]</div>
+<p><strong>L-BFGS</strong> (Limited-memory BFGS):
+Approximates the inverse Hessian using gradient history:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># L-BFGS optimizer - requires closure for multiple evaluations</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">LBFGS</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">closure</span><span class="p">():</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="k">return</span> <span class="n">loss</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">closure</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="beyond-standard-backpropagation">Beyond Standard Backpropagation</h2>
+<h3 id="higher-order-derivatives">Higher-Order Derivatives</h3>
+<p><strong>Gradient of Gradients</strong> (useful for meta-learning):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_second_order_gradients</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">loss</span><span class="p">):</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute gradients of gradients&quot;&quot;&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">first_grads</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> 
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>                                     <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="c1"># Compute second-order gradients</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">second_grads</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="k">for</span> <span class="n">grad</span> <span class="ow">in</span> <span class="n">first_grads</span><span class="p">:</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="n">second_grad</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">grad</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>                                         <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="n">second_grads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">second_grad</span><span class="p">)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="k">return</span> <span class="n">first_grads</span><span class="p">,</span> <span class="n">second_grads</span>
+</code></pre></div></p>
+<h3 id="differentiable-programming">Differentiable Programming</h3>
+<p><strong>Backpropagation Through Algorithms</strong>:
+Modern AD systems can differentiate through:
+- Control flow (if/else, loops)
+- Data structures (lists, trees)
+- Iterative algorithms (optimization, simulation)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">differentiable_algorithm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Example: differentiable fixed-point iteration&quot;&quot;&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">x</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="n">result</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">result</span> <span class="o">+</span> <span class="n">x</span> <span class="o">/</span> <span class="n">result</span><span class="p">)</span>  <span class="c1"># Newton&#39;s method for sqrt</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="n">sqrt_x</span> <span class="o">=</span> <span class="n">differentiable_algorithm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="n">sqrt_x</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;d(sqrt(x))/dx at x=2: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">grad</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Should be ≈ 1/(2√2) ≈ 0.354</span>
+</code></pre></div>
+<h3 id="meta-learning-and-maml">Meta-Learning and MAML</h3>
+<p><strong>Model-Agnostic Meta-Learning</strong> uses gradients of gradients:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">maml_update</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">support_x</span><span class="p">,</span> <span class="n">support_y</span><span class="p">,</span> <span class="n">query_x</span><span class="p">,</span> <span class="n">query_y</span><span class="p">,</span> 
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>                <span class="n">inner_lr</span><span class="p">,</span> <span class="n">meta_lr</span><span class="p">):</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Simplified MAML implementation&quot;&quot;&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="c1"># Inner loop: adapt to support set</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">adapted_params</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>        <span class="n">adapted_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="c1"># Compute adaptation gradients</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">support_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">support_x</span><span class="p">),</span> <span class="n">support_y</span><span class="p">)</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="n">adapt_grads</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">support_loss</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>                                     <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="c1"># Apply inner loop update</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">param</span><span class="p">),</span> <span class="n">grad</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">(),</span> <span class="n">adapt_grads</span><span class="p">):</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>        <span class="n">adapted_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span> <span class="o">-</span> <span class="n">inner_lr</span> <span class="o">*</span> <span class="n">grad</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>    <span class="c1"># Evaluate on query set with adapted parameters</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>    <span class="c1"># (Implementation details omitted for brevity)</span>
+</code></pre></div></p>
+<hr />
+<h2 id="practical-considerations-and-best-practices">Practical Considerations and Best Practices</h2>
+<h3 id="debugging-gradients">Debugging Gradients</h3>
+<p><strong>Gradient Checking</strong>:
+Verify gradients using finite differences:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">gradient_check</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare analytical vs. numerical gradients&quot;&quot;&quot;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>        <span class="n">analytical_grad</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>        <span class="n">numerical_grad</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">numel</span><span class="p">()):</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>            <span class="c1"># Analytical gradient</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>            <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">input_data</span><span class="p">),</span> <span class="n">target</span><span class="p">)</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>            <span class="n">analytical_grad</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>            <span class="n">model</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>            <span class="c1"># Numerical gradient</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>            <span class="n">original_value</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>            <span class="n">param</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">epsilon</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>            <span class="n">loss_plus</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">input_data</span><span class="p">),</span> <span class="n">target</span><span class="p">)</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>            <span class="n">param</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">original_value</span> <span class="o">-</span> <span class="n">epsilon</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>            <span class="n">loss_minus</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">input_data</span><span class="p">),</span> <span class="n">target</span><span class="p">)</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>            <span class="n">param</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">original_value</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>            <span class="n">numerical_grad</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">loss_plus</span> <span class="o">-</span> <span class="n">loss_minus</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">epsilon</span><span class="p">))</span>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>        <span class="c1"># Compare gradients</span>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>        <span class="n">diff</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">analytical_grad</span><span class="p">)</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">numerical_grad</span><span class="p">)</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>        <span class="n">relative_error</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">analytical_grad</span><span class="p">))</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: relative error = </span><span class="si">{</span><span class="n">relative_error</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="common-pitfalls-and-solutions">Common Pitfalls and Solutions</h3>
+<p><strong>1. Vanishing/Exploding Gradients</strong>:
+- <strong>Problem</strong>: Gradients become too small or too large in deep networks
+- <strong>Solutions</strong>: 
+  - Proper weight initialization (Xavier, He initialization)
+  - Normalization layers (BatchNorm, LayerNorm)
+  - Residual connections
+  - Gradient clipping</p>
+<p><strong>2. Dead ReLU Problem</strong>:
+- <strong>Problem</strong>: Neurons output zero for all inputs, preventing learning
+- <strong>Solutions</strong>: 
+  - Leaky ReLU: <span class="arithmatex">\(\max(0.01x, x)\)</span>
+  - Parametric ReLU: <span class="arithmatex">\(\max(\alpha x, x)\)</span> where <span class="arithmatex">\(\alpha\)</span> is learned
+  - ELU, SELU, or other smooth activations</p>
+<p><strong>3. Memory Issues</strong>:
+- <strong>Problem</strong>: Storing all activations for backprop uses too much memory
+- <strong>Solutions</strong>:
+  - Gradient checkpointing
+  - Mixed precision training
+  - Model parallelism</p>
+<hr />
+<h2 id="connection-to-modern-ai-and-agents">Connection to Modern AI and Agents</h2>
+<h3 id="backpropagation-in-generative-ai">Backpropagation in Generative AI</h3>
+<p><strong>Large Language Models</strong>:
+- <strong>Scale</strong>: GPT-3 has 175B parameters, requiring sophisticated gradient computation and accumulation
+- <strong>Sequence modeling</strong>: Backpropagation through time (BPTT) for transformer attention mechanisms
+- <strong>Mixed precision</strong>: Using 16-bit floats for forward pass, 32-bit for gradient computation</p>
+<p><strong>Diffusion Models</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">diffusion_loss</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_0</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">noise</span><span class="p">):</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Simplified diffusion model loss with backpropagation&quot;&quot;&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="c1"># Add noise according to schedule</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">x_t</span> <span class="o">=</span> <span class="n">add_noise</span><span class="p">(</span><span class="n">x_0</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">noise</span><span class="p">)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="c1"># Predict noise</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="n">predicted_noise</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x_t</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    <span class="c1"># Compute loss and gradients</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">predicted_noise</span><span class="p">,</span> <span class="n">noise</span><span class="p">)</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>    <span class="k">return</span> <span class="n">loss</span>
+</code></pre></div></p>
+<h3 id="gradient-based-optimization-in-ai-agents">Gradient-Based Optimization in AI Agents</h3>
+<p><strong>Differentiable Planning</strong>:
+Modern AI agents use backpropagation for planning:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">differentiable_planner</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="n">goal_state</span><span class="p">,</span> <span class="n">world_model</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Use gradients to optimize action sequences&quot;&quot;&quot;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">actions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">state</span> <span class="o">=</span> <span class="n">initial_state</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>        <span class="n">state</span> <span class="o">=</span> <span class="n">world_model</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>  <span class="c1"># Differentiable dynamics</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="c1"># Loss: distance to goal</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>    <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">goal_state</span><span class="p">)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>    <span class="c1"># Optimize actions using gradients</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>    <span class="k">return</span> <span class="n">actions</span><span class="o">.</span><span class="n">grad</span>
+</code></pre></div>
+<p><strong>Meta-Learning for Few-Shot Adaptation</strong>:
+Agents that quickly adapt to new tasks using gradient-based meta-learning:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">MetaAgent</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_model</span><span class="p">):</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">base_model</span> <span class="o">=</span> <span class="n">base_model</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">adapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">support_data</span><span class="p">,</span> <span class="n">adaptation_steps</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Quickly adapt to new task using gradients&quot;&quot;&quot;</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>        <span class="n">adapted_model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_model</span><span class="p">)</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">adapted_model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">adaptation_steps</span><span class="p">):</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>            <span class="n">loss</span> <span class="o">=</span> <span class="n">compute_support_loss</span><span class="p">(</span><span class="n">adapted_model</span><span class="p">,</span> <span class="n">support_data</span><span class="p">)</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>            <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>            <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>        <span class="k">return</span> <span class="n">adapted_model</span>
+</code></pre></div>
+<h3 id="on-device-learning-and-adaptation">On-Device Learning and Adaptation</h3>
+<p><strong>Continual Learning</strong>:
+Agents that update their parameters during deployment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">online_learning_agent</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">new_experience</span><span class="p">):</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Update agent parameters from new experience&quot;&quot;&quot;</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="c1"># Compute gradients from new experience</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">loss</span> <span class="o">=</span> <span class="n">compute_experience_loss</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">new_experience</span><span class="p">)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="c1"># Apply elastic weight consolidation to prevent forgetting</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    <span class="n">ewc_loss</span> <span class="o">=</span> <span class="n">compute_ewc_penalty</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">previous_fisher_matrix</span><span class="p">)</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="n">total_loss</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">+</span> <span class="n">ewc_lambda</span> <span class="o">*</span> <span class="n">ewc_loss</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>    <span class="n">total_loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Federated Learning</strong>:
+Distributed gradient computation across devices:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">federated_gradient_update</span><span class="p">(</span><span class="n">local_models</span><span class="p">,</span> <span class="n">global_model</span><span class="p">):</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate gradients from multiple devices&quot;&quot;&quot;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">global_gradients</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">global_model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>        <span class="c1"># Average gradients from all local models</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>        <span class="n">grad_sum</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>        <span class="k">for</span> <span class="n">local_model</span> <span class="ow">in</span> <span class="n">local_models</span><span class="p">:</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>            <span class="n">local_param</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">local_model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">())[</span><span class="n">name</span><span class="p">]</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>            <span class="n">grad_sum</span> <span class="o">+=</span> <span class="n">local_param</span><span class="o">.</span><span class="n">grad</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>        <span class="n">global_gradients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">grad_sum</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">local_models</span><span class="p">)</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>    <span class="c1"># Apply aggregated gradients to global model</span>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">global_model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>        <span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">global_gradients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+</code></pre></div>
+<hr />
+<h2 id="q-a">Q &amp; A</h2>
+<p><strong>Q: Why prefer reverse-mode over forward-mode automatic differentiation for deep networks?</strong><br />
+<strong>A:</strong> <strong>Computational efficiency dominates the choice</strong>. Reverse-mode computes gradients w.r.t. all parameters in time proportional to one forward pass, regardless of parameter count. Forward-mode would require one pass per parameter, making it <span class="arithmatex">\(O(\text{num\_parameters})\)</span> times more expensive. Since neural networks typically have millions to billions of parameters but scalar loss functions, reverse-mode provides orders of magnitude speedup. Additionally, reverse-mode naturally computes the exact gradients needed for gradient descent optimization.</p>
+<p><strong>Q: What breaks if activations are not stored during the forward pass?</strong><br />
+<strong>A:</strong> <strong>Gradient computation becomes impossible or inefficient</strong>. The backward pass requires activation values to compute gradients via the chain rule. Without stored activations, you would need to recompute them during backpropagation, essentially doubling computational cost. <strong>Gradient checkpointing</strong> strategically addresses this by storing only some activations and recomputing others, trading computation for memory. Modern frameworks like PyTorch automatically handle activation storage, but memory-constrained scenarios require careful consideration of this trade-off.</p>
+<p><strong>Q: How does backpropagation handle different activation functions, and why do some cause vanishing gradients?</strong><br />
+<strong>A:</strong> <strong>Activation function derivatives directly control gradient flow</strong>. During backpropagation, gradients are multiplied by activation derivatives at each layer. <strong>Sigmoid</strong> and <strong>tanh</strong> have derivatives bounded by 0.25 and 1.0 respectively, causing gradients to shrink exponentially in deep networks. <strong>ReLU</strong> has derivative 1 for positive inputs and 0 for negative, eliminating vanishing gradients but introducing dead neuron problems. <strong>Modern activations</strong> like GELU and Swish provide smoother gradients while maintaining non-linearity. The choice significantly impacts training dynamics and network depth limitations.</p>
+<p><strong>Q: How do modern optimizers like Adam interact with backpropagation?</strong><br />
+<strong>A:</strong> <strong>Backpropagation computes raw gradients; optimizers determine how to use them</strong>. Adam enhances gradient-based optimization by maintaining exponential moving averages of gradients (momentum) and squared gradients (adaptive learning rates). After backpropagation computes <span class="arithmatex">\(\nabla_\theta \mathcal{L}\)</span>, Adam applies:
+<span class="arithmatex">\(<span class="arithmatex">\(m_t = \beta_1 m_{t-1} + (1-\beta_1)\nabla_\theta \mathcal{L}\)</span>\)</span>
+<span class="arithmatex">\(<span class="arithmatex">\(v_t = \beta_2 v_{t-1} + (1-\beta_2)(\nabla_\theta \mathcal{L})^2\)</span>\)</span>
+<span class="arithmatex">\(<span class="arithmatex">\(\theta_{t+1} = \theta_t - \alpha \frac{m_t}{\sqrt{v_t} + \epsilon}\)</span>\)</span>
+This provides adaptive per-parameter learning rates and momentum, dramatically improving convergence compared to raw gradient descent.</p>
+<p><strong>Q: Can backpropagation be applied to non-differentiable functions or discrete operations?</strong><br />
+<strong>A:</strong> <strong>Standard backpropagation requires differentiability, but several techniques handle discrete cases</strong>. For non-differentiable points (like ReLU at zero), we use <strong>subgradients</strong> or assign arbitrary derivatives. For discrete operations, approaches include: (1) <strong>Straight-through estimators</strong> - use identity gradients through discrete operations, (2) <strong>Gumbel-Softmax</strong> - continuous approximations of discrete distributions, (3) <strong>REINFORCE</strong> - policy gradient methods for discrete actions, and (4) <strong>Differentiable relaxations</strong> - continuous approximations of discrete functions. These enable gradient-based learning in scenarios with discrete components.</p>
+<p><strong>Q: How does gradient checkpointing work, and when should it be used?</strong><br />
+<strong>A:</strong> <strong>Gradient checkpointing trades computation for memory by selectively storing activations</strong>. Instead of storing all intermediate activations, it saves only checkpoints (e.g., every <span class="arithmatex">\(\sqrt{n}\)</span> layers) and recomputes intermediate values during backpropagation. This reduces memory from <span class="arithmatex">\(O(n)\)</span> to <span class="arithmatex">\(O(\sqrt{n})\)</span> with only <span class="arithmatex">\(O(\sqrt{n})\)</span> additional computation. <strong>Use when</strong>: training very deep networks, working with limited GPU memory, or processing large batch sizes. <strong>Avoid when</strong>: computational budget is tight, or network is already memory-efficient. Modern implementations automatically determine optimal checkpointing strategies.</p>
+<p><strong>Q: What is the relationship between backpropagation and other automatic differentiation techniques?</strong><br />
+<strong>A:</strong> <strong>Backpropagation is a specific implementation of reverse-mode automatic differentiation for neural networks</strong>. The broader AD landscape includes: (1) <strong>Forward-mode AD</strong> - efficient for functions with few inputs, many outputs, (2) <strong>Reverse-mode AD</strong> - efficient for many inputs, few outputs (includes backpropagation), (3) <strong>Mixed-mode AD</strong> - combines both for optimal efficiency, and (4) <strong>Higher-order AD</strong> - computes gradients of gradients for meta-learning and optimization. Modern frameworks like JAX provide general AD capabilities beyond neural networks, enabling differentiable programming across diverse computational patterns.</p>
+<p><strong>Q: How do computational graphs enable advanced features like dynamic networks and meta-learning?</strong><br />
+<strong>A:</strong> <strong>Dynamic computational graphs allow runtime graph construction, enabling flexible architectures</strong>. Unlike static graphs that must be pre-defined, dynamic graphs support: (1) <strong>Variable network depth</strong> based on input properties, (2) <strong>Conditional computation</strong> with if/else logic, (3) <strong>Recursive structures</strong> like TreeLSTMs, and (4) <strong>Meta-learning</strong> where gradients flow through optimization steps. This flexibility enables neural architecture search, adaptive computation, and algorithms that modify themselves during execution. The trade-off is slightly higher overhead compared to static graphs, but the expressiveness often justifies the cost.</p>
+<hr />
+<h2 id="summary-and-future-directions">Summary and Future Directions</h2>
+<p>Backpropagation represents one of the most fundamental algorithmic advances in machine learning, enabling the training of arbitrarily complex neural networks through efficient gradient computation. Its mathematical elegance—systematic application of the chain rule—belies its computational sophistication and practical importance.</p>
+<p><strong>Key Insights</strong>:</p>
+<ol>
+<li>
+<p><strong>Computational efficiency</strong>: The ability to compute gradients for millions of parameters in time proportional to a single forward pass is what makes deep learning computationally feasible</p>
+</li>
+<li>
+<p><strong>Automatic differentiation</strong>: Modern implementations extend far beyond neural networks, enabling differentiable programming across diverse computational domains</p>
+</li>
+<li>
+<p><strong>Optimization foundation</strong>: Backpropagation provides the gradient information that drives all gradient-based optimization, from SGD to sophisticated second-order methods</p>
+</li>
+<li>
+<p><strong>Scalability</strong>: The algorithm scales from simple perceptrons to massive language models with hundreds of billions of parameters</p>
+</li>
+</ol>
+<p><strong>Modern Relevance</strong>: 
+- <strong>Large-scale training</strong>: Enables training of GPT-scale models through distributed gradient computation
+- <strong>Meta-learning</strong>: Second-order gradients enable rapid adaptation and few-shot learning
+- <strong>Differentiable programming</strong>: Extends gradient-based optimization to algorithm design and automated reasoning</p>
+<p><strong>Future Directions</strong>:
+- <strong>Biological plausibility</strong>: Research into more biologically realistic learning algorithms
+- <strong>Memory efficiency</strong>: Advanced checkpointing and compression techniques for extreme-scale models
+- <strong>Hardware optimization</strong>: Co-design of algorithms and hardware for optimal gradient computation
+- <strong>Beyond gradients</strong>: Integration with gradient-free optimization for hybrid approaches</p>
+<p>The principles underlying backpropagation continue to drive advances in artificial intelligence, from the largest language models to the most sophisticated robotic control systems. Understanding these foundations provides crucial insight into both current capabilities and future possibilities in AI system design.</p>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../01_classic_agents/model_based_reflex_agent/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Model-Based Reflex Agents">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Model-Based Reflex Agents
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../autograd/" class="md-footer__link md-footer__link--next" aria-label="Next: Autograd">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Autograd
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.footer", "content.code.copy", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>

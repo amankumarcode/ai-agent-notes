@@ -1,0 +1,1630 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../../01_classic_agents/reflex_agents/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Linear Algebra - AI-Agent Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#linear-algebra-refresher" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI-Agent Notes" class="md-header__button md-logo" aria-label="AI-Agent Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-Agent Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Linear Algebra
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-Agent Notes" class="md-nav__button md-logo" aria-label="AI-Agent Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-Agent Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Foundations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Linear Algebra
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linear Algebra
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference Guide
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the Basics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding the Basics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-vectors-and-vector-spaces-your-datas-home" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Vectors and Vector Spaces - Your Data's Home
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-eigenvalues-and-eigenvectors-finding-special-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Eigenvalues and Eigenvectors - Finding Special Directions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-singular-value-decomposition-svd-the-ultimate-data-analyzer" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Singular Value Decomposition (SVD) - The Ultimate Data Analyzer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-norms-and-conditioning-measuring-distance-and-stability" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Norms and Conditioning - Measuring Distance and Stability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-high-dimensional-geometry-when-intuition-breaks-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. High-Dimensional Geometry - When Intuition Breaks Down
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-connects-to-ai-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      How This Connects to AI Systems
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How This Connects to AI Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-attention-mechanism-linear-algebra-in-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Attention Mechanism - Linear Algebra in Action
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vector-databases-and-rag-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector Databases and RAG Systems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planning-and-state-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Planning and State Representation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-examples-with-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Examples with Code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Examples with Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-understanding-attention-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Understanding Attention Scores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-dimensionality-reduction-with-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Dimensionality Reduction with SVD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-high-dimensional-distance-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 3: High-Dimensional Distance Problems
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-questions-answered-simply" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Questions Answered Simply
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Classic Agents
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Classic Agents
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_classic_agents/reflex_agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simple Reflex Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01_classic_agents/model_based_reflex_agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Model-Based Reflex Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_llm_primer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LLM Primer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transformers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_agent_patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Agent Patterns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_multi_agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multi-Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_rag_and_memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    RAG & Memory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Deep Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_deep_learning/backprop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backpropagation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_deep_learning/autograd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Autograd
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../daily_logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Daily Logs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference Guide
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the Basics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding the Basics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-vectors-and-vector-spaces-your-datas-home" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Vectors and Vector Spaces - Your Data's Home
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-eigenvalues-and-eigenvectors-finding-special-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Eigenvalues and Eigenvectors - Finding Special Directions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-singular-value-decomposition-svd-the-ultimate-data-analyzer" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Singular Value Decomposition (SVD) - The Ultimate Data Analyzer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-norms-and-conditioning-measuring-distance-and-stability" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Norms and Conditioning - Measuring Distance and Stability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-high-dimensional-geometry-when-intuition-breaks-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. High-Dimensional Geometry - When Intuition Breaks Down
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-this-connects-to-ai-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      How This Connects to AI Systems
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How This Connects to AI Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-attention-mechanism-linear-algebra-in-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Attention Mechanism - Linear Algebra in Action
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vector-databases-and-rag-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector Databases and RAG Systems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planning-and-state-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Planning and State Representation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-examples-with-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Examples with Code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Examples with Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-understanding-attention-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Understanding Attention Scores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-dimensionality-reduction-with-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Dimensionality Reduction with SVD
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-high-dimensional-distance-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 3: High-Dimensional Distance Problems
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-questions-answered-simply" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Questions Answered Simply
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="linear-algebra-refresher">Linear Algebra Refresher</h1>
+<p><strong>Updated:</strong> 2025-07-22</p>
+<h2 id="tldr">TL;DR</h2>
+<ul>
+<li><strong>Vectors and matrices</strong> are like the building blocks of AI - they help computers understand and manipulate data</li>
+<li><strong>Breaking down complex problems</strong> (like SVD) helps us find hidden patterns in data</li>
+<li><strong>Measuring distances and stability</strong> ensures our AI models train smoothly and give reliable results</li>
+<li><strong>Every AI operation</strong> - from understanding language to generating images - uses these mathematical tools under the hood</li>
+</ul>
+<hr />
+<h2 id="quick-reference-guide">Quick Reference Guide</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>What It Does</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dot product</strong></td>
+<td>Measures how similar two vectors are</td>
+<td>Used everywhere in AI for similarity</td>
+</tr>
+<tr>
+<td><strong>Matrix multiply</strong></td>
+<td>Combines transformations</td>
+<td>How neural networks process information</td>
+</tr>
+<tr>
+<td><strong>Vector length</strong></td>
+<td>Measures the "size" of a vector</td>
+<td>Important for normalizing data</td>
+</tr>
+<tr>
+<td><strong>SVD</strong></td>
+<td>Finds the most important patterns</td>
+<td>Compresses data while keeping key info</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="understanding-the-basics">Understanding the Basics</h2>
+<h3 id="1-vectors-and-vector-spaces-your-datas-home">1. Vectors and Vector Spaces - Your Data's Home</h3>
+<p><strong>Think of vectors like GPS coordinates.</strong> Just as your location can be described with latitude and longitude, any piece of data can be represented as a list of numbers (a vector).</p>
+<p><strong>What's a Vector Space?</strong>
+Imagine a coordinate system where each axis represents a different feature of your data:</p>
+<ul>
+<li><strong>2D example</strong>: A house might be <code>[bedrooms, bathrooms]</code> = <code>[3, 2]</code></li>
+<li><strong>3D example</strong>: A color might be <code>[red, green, blue]</code> = <code>[255, 128, 0]</code></li>
+<li><strong>High-D example</strong>: A word in AI might be <code>[meaning1, meaning2, ..., meaning300]</code></li>
+</ul>
+<p><strong>Key Ideas:</strong></p>
+<ul>
+<li><strong>Span</strong>: All the places you can reach by combining your directions</li>
+<li><strong>Linear independence</strong>: When directions don't overlap (like north vs. east)</li>
+<li><strong>Basis</strong>: The minimum set of directions needed to reach anywhere</li>
+</ul>
+<p><strong>Real-World Example:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Recipe vectors in a cooking app:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Pizza: [flour=2, cheese=1, tomato=1, meat=0.5]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Salad: [flour=0, cheese=0.2, tomato=0.8, meat=0.3]
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>The &quot;span&quot; includes all possible recipes you can make!
+</code></pre></div></p>
+<p><strong>Change of Basis - New Perspectives:</strong>
+When we transform <code>P^{-1}AP</code>, we're like changing from Celsius to Fahrenheit - same temperature, different scale. In AI, each layer of a neural network creates a new "perspective" on the data.</p>
+<pre class="mermaid"><code>graph LR
+    A[Raw Data&lt;br/&gt;Words as text] --&gt;|Layer 1| B[Basic Features&lt;br/&gt;Letter patterns]
+    B --&gt;|Layer 2| C[Word Meanings&lt;br/&gt;Semantic concepts]
+    C --&gt;|Layer 3| D[Context&lt;br/&gt;Sentence understanding]</code></pre>
+<h3 id="2-eigenvalues-and-eigenvectors-finding-special-directions">2. Eigenvalues and Eigenvectors - Finding Special Directions</h3>
+<p><strong>Simple Explanation:</strong> Imagine you're stretching a rubber sheet. Most directions get distorted, but some special directions only get longer or shorter - they don't change direction. These are eigenvectors!</p>
+<p><strong>The Math:</strong> If <code>Av = λv</code>, then:</p>
+<ul>
+<li><strong>v</strong> is the eigenvector (the special direction)</li>
+<li><strong>λ</strong> (lambda) is the eigenvalue (how much it stretches)</li>
+</ul>
+<p><strong>Step-by-Step Process:</strong></p>
+<ol>
+<li><strong>Set up the problem</strong>: <code>(A - λI)v = 0</code></li>
+<li><strong>Find the eigenvalues</strong>: Solve <code>det(A - λI) = 0</code></li>
+<li><strong>Find the eigenvectors</strong>: For each λ, solve <code>(A - λI)v = 0</code></li>
+</ol>
+<p><strong>Visual Understanding:</strong></p>
+<ul>
+<li><strong>Positive eigenvalue</strong>: Vector stretches in same direction</li>
+<li><strong>Negative eigenvalue</strong>: Vector flips and stretches  </li>
+<li><strong>Eigenvalue = 1</strong>: No change (identity)</li>
+<li><strong>Eigenvalue between 0 and 1</strong>: Shrinks</li>
+<li><strong>Complex eigenvalues</strong>: Rotation happens</li>
+</ul>
+<p><strong>Concrete Example:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Matrix A = [3  1]
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>           [0  2]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Step 1: Find eigenvalues
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>det([3-λ  1  ]) = (3-λ)(2-λ) = 0
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>   ([0  2-λ])
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Solutions: λ₁ = 3, λ₂ = 2
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Step 2: Find eigenvectors
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>For λ₁ = 3: eigenvector = [1]
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                          [0]
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>For λ₂ = 2: eigenvector = [1]
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                          [0]
+</code></pre></div></p>
+<p><strong>AI Application Example:</strong>
+In recommendation systems, eigenvectors help find the most important user preferences. If users rate movies, the dominant eigenvector might represent "action vs. drama preference."</p>
+<blockquote>
+<p><strong>Fun Fact for AI:</strong> Google's PageRank algorithm uses eigenvectors to rank web pages! The eigenvector with the largest eigenvalue tells us which pages are most important.</p>
+</blockquote>
+<pre class="mermaid"><code>graph TD
+    A[Matrix A] --&gt; B[Apply to many vectors]
+    B --&gt; C{Does any vector keep its direction?}
+    C --&gt;|Yes| D[Found an eigenvector!&lt;br/&gt;Direction preserved]
+    C --&gt;|No| E[Keep searching different directions]
+    D --&gt; F[Eigenvalue tells us the scaling factor]</code></pre>
+<h3 id="3-singular-value-decomposition-svd-the-ultimate-data-analyzer">3. Singular Value Decomposition (SVD) - The Ultimate Data Analyzer</h3>
+<p><strong>The Big Picture:</strong> SVD is like having X-ray vision for data. It shows you the most important patterns hidden inside any dataset.</p>
+<p><strong>What SVD Does:</strong>
+Every matrix (think: data table) can be broken into three simpler pieces:
+<span class="arithmatex">\(<span class="arithmatex">\(A = U\Sigma V^T\)</span>\)</span></p>
+<p>Think of it like this:</p>
+<ul>
+<li><strong>U</strong>: How rows relate to patterns</li>
+<li><strong>Σ</strong> (Sigma): How important each pattern is  </li>
+<li><strong>V^T</strong>: How columns relate to patterns</li>
+</ul>
+<p><strong>Step-by-Step Breakdown:</strong></p>
+<ol>
+<li><strong>Start with your data matrix A</strong> (like a spreadsheet)</li>
+<li><strong>Compute A^T A</strong> and find its eigenvalues/eigenvectors</li>
+<li><strong>Extract the components</strong>:</li>
+<li>Singular values: σᵢ = √(eigenvalues)</li>
+<li>Right singular vectors: V (from eigenvectors of A^T A)</li>
+<li>Left singular vectors: U = AV/σ</li>
+</ol>
+<p><strong>Why SVD is Amazing:</strong></p>
+<ul>
+<li><strong>Data compression</strong>: Keep only the biggest patterns</li>
+<li><strong>Noise removal</strong>: Small patterns are often just noise</li>
+<li><strong>Dimension reduction</strong>: Project high-D data to low-D space</li>
+<li><strong>Missing data</strong>: Fill in gaps using known patterns</li>
+</ul>
+<p><strong>Real-World Example - Movie Recommendations:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Original data (users × movies):
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>           Action1  Romance1  Comedy1  Action2
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Alice         5        1        2        4
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Bob           1        5        4        2  
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Carol         4        2        3        5
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>SVD reveals hidden patterns:
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Pattern 1: &quot;Action lovers&quot; (Alice, Carol like action)
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Pattern 2: &quot;Romance lovers&quot; (Bob likes romance/comedy)
+</code></pre></div></p>
+<p><strong>Low-Rank Approximation Magic:</strong>
+Instead of storing all the data, keep only the top k patterns:
+<span class="arithmatex">\(<span class="arithmatex">\(A_k = \sum_{i=1}^k \sigma_i u_i v_i^T\)</span>\)</span></p>
+<p><strong>Example</strong>: Netflix doesn't store every user rating. Instead, it stores patterns like "sci-fi preference" and "comedy preference" and reconstructs ratings from these patterns!</p>
+<pre class="mermaid"><code>graph LR
+    A[Original Data&lt;br/&gt;1000×1000 matrix&lt;br/&gt;1M numbers] --&gt; B[SVD Analysis]
+    B --&gt; C[Top 50 Patterns&lt;br/&gt;Only 100K numbers]
+    B --&gt; D[Reconstructed Data&lt;br/&gt;99% accuracy]
+
+    C --&gt; E[90% Storage Savings!]
+    D --&gt; F[Minimal Quality Loss]</code></pre>
+<p><strong>AI Applications:</strong>
+- <strong>Language models</strong>: Compress word embeddings from 300D to 50D
+- <strong>Image processing</strong>: JPEG compression uses similar ideas
+- <strong>Recommendation systems</strong>: Find user preference patterns</p>
+<h3 id="4-norms-and-conditioning-measuring-distance-and-stability">4. Norms and Conditioning - Measuring Distance and Stability</h3>
+<p><strong>Understanding Norms - Different Ways to Measure Size:</strong></p>
+<p>Think of norms like different ways to measure how far you've traveled:</p>
+<p><strong>Vector Norms:</strong></p>
+<ul>
+<li><strong>L1 norm (Manhattan distance)</strong>: <code>||v||₁ = |v₁| + |v₂| + ... + |vₙ|</code></li>
+<li><em>Like walking in a city</em> - you can only go along streets (no diagonal shortcuts)</li>
+<li>
+<p>Example: To go from (0,0) to (3,4), you walk 3 blocks + 4 blocks = 7 blocks</p>
+</li>
+<li>
+<p><strong>L2 norm (Euclidean distance)</strong>: <code>||v||₂ = √(v₁² + v₂² + ... + vₙ²)</code></p>
+</li>
+<li><em>Like flying in a straight line</em> - the direct path</li>
+<li>
+<p>Example: From (0,0) to (3,4) is √(3² + 4²) = √25 = 5 units</p>
+</li>
+<li>
+<p><strong>L∞ norm (Maximum norm)</strong>: <code>||v||∞ = max(|v₁|, |v₂|, ..., |vₙ|)</code></p>
+</li>
+<li><em>Like the bottleneck</em> - limited by your worst dimension</li>
+<li>Example: From (0,0) to (3,4), the max is 4</li>
+</ul>
+<p><strong>Visual Example:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Vector v = [3, 4]
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>L1 norm: |3| + |4| = 7     (Manhattan distance)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>L2 norm: √(3² + 4²) = 5    (Straight line)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>L∞ norm: max(3, 4) = 4     (Largest component)
+</code></pre></div></p>
+<p><strong>Matrix Norms:</strong></p>
+<ul>
+<li><strong>Frobenius norm</strong>: <code>||A||F = √(sum of all squares)</code></li>
+<li>
+<p>Like measuring the "total energy" in a matrix</p>
+</li>
+<li>
+<p><strong>Spectral norm</strong>: <code>||A||₂ = largest singular value</code></p>
+</li>
+<li>Like measuring the "maximum stretch" a matrix can cause</li>
+</ul>
+<p><strong>Condition Numbers - Stability Detector:</strong></p>
+<p>The condition number <code>κ(A) = ||A|| × ||A^{-1}||</code> tells you how "sensitive" your problem is:</p>
+<ul>
+<li><strong>κ(A) ≈ 1</strong>: Well-behaved (small input changes → small output changes)</li>
+<li><strong>κ(A) &gt; 1000</strong>: Dangerous! (tiny input changes → huge output changes)</li>
+</ul>
+<p><strong>Simple Analogy:</strong>
+Imagine you're following GPS directions:</p>
+<ul>
+<li><strong>Well-conditioned</strong> (κ ≈ 1): Being 1 meter off course keeps you 1 meter off target</li>
+<li><strong>Ill-conditioned</strong> (κ &gt;&gt; 1): Being 1 meter off course puts you in a different city!</li>
+</ul>
+<p><strong>Examples:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Well-conditioned matrix:     Ill-conditioned matrix:
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>A = [1   0]                 A = [1     1000]
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    [0   1]                     [0        1]
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>κ(A) = 1                    κ(A) = 1000
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Effect: Stable, predictable  Effect: Tiny errors explode!
+</code></pre></div></p>
+<p><strong>Impact on AI Training:</strong></p>
+<p>When training neural networks with ill-conditioned problems:</p>
+<ul>
+<li><strong>Gradients explode</strong>: Learning becomes unstable</li>
+<li><strong>Gradients vanish</strong>: Learning stops completely</li>
+<li><strong>Solutions</strong>: </li>
+<li>Use smaller learning rates</li>
+<li>Add gradient clipping  </li>
+<li>Use better optimizers (Adam, RMSprop)</li>
+<li>Add normalization layers (BatchNorm, LayerNorm)</li>
+</ul>
+<h3 id="5-high-dimensional-geometry-when-intuition-breaks-down">5. High-Dimensional Geometry - When Intuition Breaks Down</h3>
+<p><strong>The Weird World of High Dimensions:</strong></p>
+<p>Our everyday intuition about space (3D) completely breaks down when we have hundreds or thousands of dimensions. Strange things happen:</p>
+<p><strong>Key Phenomena:</strong></p>
+<ol>
+<li><strong>Distance Concentration</strong>: </li>
+<li>In low dimensions: Some points are close, others far</li>
+<li>
+<p>In high dimensions: Almost all points are the same distance apart!</p>
+</li>
+<li>
+<p><strong>Volume Concentration</strong>: </p>
+</li>
+<li>Most of a high-dimensional sphere's volume is near its surface</li>
+<li>
+<p>The "center" is essentially empty</p>
+</li>
+<li>
+<p><strong>Random Orthogonality</strong>: </p>
+</li>
+<li>Random vectors become nearly perpendicular to each other</li>
+<li>Cosine of angle between vectors approaches 0</li>
+</ol>
+<p><strong>Why This Matters for AI:</strong></p>
+<p><strong>Similarity Search Problems:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>In 2D: Easy to find nearest neighbors
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>• • •     ← Clear clusters
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  •••
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    •
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>In 1000D: Everything seems equally distant!
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>All points look like: • • • • • • • • • •
+</code></pre></div></p>
+<p><strong>Practical Implications:</strong></p>
+<ul>
+<li><strong>Euclidean distance fails</strong>: All distances become similar</li>
+<li><strong>Cosine similarity works better</strong>: Focus on angles, not absolute distances</li>
+<li><strong>Need careful threshold tuning</strong>: What counts as "similar" changes dramatically</li>
+</ul>
+<p><strong>Real Example - Word Embeddings:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>2D word space (simplified):
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>- &quot;cat&quot; vs &quot;dog&quot;: distance = 0.3
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>- &quot;cat&quot; vs &quot;car&quot;: distance = 0.8
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>- Clear difference!
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>300D word space (realistic):
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>- &quot;cat&quot; vs &quot;dog&quot;: distance = 4.2
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>- &quot;cat&quot; vs &quot;car&quot;: distance = 4.3  
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>- Barely different!
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Solution: Use cosine similarity instead
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>- &quot;cat&quot; vs &quot;dog&quot;: cos_sim = 0.85 (similar direction)
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>- &quot;cat&quot; vs &quot;car&quot;: cos_sim = 0.12 (different direction)
+</code></pre></div></p>
+<pre class="mermaid"><code>graph TD
+    A[Low Dimensions&lt;br/&gt;2D, 3D] --&gt; B[Intuitive Behavior&lt;br/&gt;Clear near/far distinctions]
+    C[High Dimensions&lt;br/&gt;100D, 1000D] --&gt; D[Counter-intuitive Behavior&lt;br/&gt;Everything seems equidistant]
+
+    B --&gt; E[Use Euclidean distance&lt;br/&gt;Works great for clustering]
+    D --&gt; F[Use cosine similarity&lt;br/&gt;Focus on direction, not magnitude]
+
+    style D fill:#ffe6e6
+    style F fill:#e6ffe6</code></pre>
+<hr />
+<h2 id="how-this-connects-to-ai-systems">How This Connects to AI Systems</h2>
+<h3 id="the-attention-mechanism-linear-algebra-in-action">The Attention Mechanism - Linear Algebra in Action</h3>
+<p>The famous "attention" mechanism that powers ChatGPT and other language models is essentially a sophisticated sequence of matrix operations:</p>
+<pre class="mermaid"><code>graph TB
+    X[Input: "The cat sat on the mat"&lt;br/&gt;Converted to numbers] --&gt; WQ[Query Matrix&lt;br/&gt;What am I looking for?]
+    X --&gt; WK[Key Matrix&lt;br/&gt;What information do I have?]
+    X --&gt; WV[Value Matrix&lt;br/&gt;What should I output?]
+
+    WQ --&gt; Q[Q = Queries&lt;br/&gt;Questions about each word]
+    WK --&gt; K[K = Keys&lt;br/&gt;Features of each word]
+    WV --&gt; V[V = Values&lt;br/&gt;Information to extract]
+
+    Q --&gt; SCORES[Similarity Scores&lt;br/&gt;How much does each word&lt;br/&gt;relate to others?]
+    K --&gt; SCORES
+
+    SCORES --&gt; SOFT[Softmax&lt;br/&gt;Convert to probabilities]
+    SOFT --&gt; WEIGHT[Attention Weights&lt;br/&gt;How much to focus on each word]
+    WEIGHT --&gt; V
+    V --&gt; OUT[Final Output&lt;br/&gt;Contextual understanding]</code></pre>
+<p><strong>Step-by-Step Breakdown:</strong></p>
+<ol>
+<li><strong>Convert words to numbers</strong>: Each word becomes a vector of numbers</li>
+<li><strong>Create three views</strong>: Generate queries (what to look for), keys (what's available), and values (what to extract)</li>
+<li><strong>Calculate similarities</strong>: Use dot products to see which words relate to each other</li>
+<li><strong>Apply attention</strong>: Focus more on relevant words, less on irrelevant ones</li>
+<li><strong>Combine information</strong>: Mix the values based on attention weights</li>
+</ol>
+<p><strong>Mathematical Flow:</strong>
+1. <strong>Project inputs</strong>: <code>Q = XW_Q</code>, <code>K = XW_K</code>, <code>V = XW_V</code>
+2. <strong>Compute attention scores</strong>: <code>S = QK^T / √d_k</code> (scaled dot products)
+3. <strong>Apply softmax</strong>: <code>A = softmax(S)</code> (convert to probabilities)
+4. <strong>Weighted combination</strong>: <code>Output = AV</code> (final result)</p>
+<p><strong>Why the scaling factor <code>√d_k</code>?</strong>
+Without it, the dot products become huge in high dimensions, making the softmax too "sharp" (all attention goes to one word). Scaling helps keep the volume manageable.</p>
+<h3 id="vector-databases-and-rag-systems">Vector Databases and RAG Systems</h3>
+<p><strong>How AI Retrieves Information:</strong></p>
+<p>Modern AI systems don't memorize everything. Instead, they store information in vector databases and retrieve relevant pieces when needed:</p>
+<pre class="mermaid"><code>graph LR
+    Q[User Question&lt;br/&gt;"How does photosynthesis work?"] --&gt; E[Convert to Vector&lt;br/&gt;[0.2, -0.5, 0.8, ...]]
+    E --&gt; S[Search Vector Database&lt;br/&gt;Find similar vectors]
+    S --&gt; M[Retrieve Matching Documents&lt;br/&gt;Biology textbooks, articles]
+    M --&gt; C[Combine with Question&lt;br/&gt;Provide context to AI]
+    C --&gt; A[Generate Answer&lt;br/&gt;Using retrieved knowledge]</code></pre>
+<p><strong>The Math Behind It:</strong>
+- <strong>Embedding</strong>: Convert text to high-dimensional vectors
+- <strong>Similarity search</strong>: Use cosine similarity or dot products
+- <strong>Approximate nearest neighbor</strong>: Fast algorithms for large databases</p>
+<h3 id="planning-and-state-representation">Planning and State Representation</h3>
+<p><strong>For AI Agents and Robotics:</strong></p>
+<ul>
+<li><strong>State vectors</strong>: Current situation as numbers</li>
+<li><strong>Action matrices</strong>: How decisions change the state  </li>
+<li><strong>Value functions</strong>: How good each state is</li>
+<li><strong>Policy matrices</strong>: What action to take in each state</li>
+</ul>
+<p><strong>Example - Game Playing AI:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Chess board state: [piece_positions, whose_turn, castling_rights, ...]
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Action matrix: All possible moves as transformations
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Value function: How likely to win from this position
+</code></pre></div></p>
+<hr />
+<h2 id="practical-examples-with-code">Practical Examples with Code</h2>
+<h3 id="example-1-understanding-attention-scores">Example 1: Understanding Attention Scores</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">simple_attention_example</span><span class="p">():</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="sd">    Example: Understanding what words in a sentence </span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="sd">    should pay attention to each other</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="c1"># Sentence: &quot;The cat sat on the mat&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="c1"># Simplified word vectors (normally 300+ dimensions)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="n">words</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        <span class="s1">&#39;the&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>        <span class="s1">&#39;cat&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>  <span class="c1"># Animal-like</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>        <span class="s1">&#39;sat&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>  <span class="c1"># Action</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>        <span class="s1">&#39;on&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="c1"># Preposition</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        <span class="s1">&#39;mat&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span> <span class="c1"># Object</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    <span class="p">}</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>    <span class="c1"># Create matrices (simplified)</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>    <span class="n">sentence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">words</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>    <span class="c1"># Compute attention (which words relate to which)</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    <span class="n">attention_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">sentence</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attention scores (higher = more related):&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>    <span class="n">word_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">words</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">word1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">word_list</span><span class="p">):</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">word2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">word_list</span><span class="p">):</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">word1</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">word2</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">attention_scores</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>    <span class="k">return</span> <span class="n">attention_scores</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="c1"># This shows how &quot;cat&quot; and &quot;mat&quot; are related (subject-object relationship)</span>
+</code></pre></div>
+<h3 id="example-2-dimensionality-reduction-with-svd">Example 2: Dimensionality Reduction with SVD</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">movie_recommendation_svd</span><span class="p">():</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="sd">    Example: How Netflix-style recommendations work</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="sd">    using SVD to find hidden patterns</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="c1"># User ratings (users × movies)</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="c1"># -1 means not rated</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="n">ratings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>  <span class="c1"># Alice: loves action, hates romance</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>  <span class="c1"># Bob: loves romance and comedy</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>  <span class="c1"># Carol: likes action and comedy</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>        <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>  <span class="c1"># Dave: mixed preferences</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="p">])</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="c1"># Replace missing ratings with average</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ratings</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ratings</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>            <span class="k">if</span> <span class="n">ratings</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>                <span class="c1"># Use user&#39;s average rating</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>                <span class="n">user_ratings</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">ratings</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>                <span class="n">ratings</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">user_ratings</span><span class="p">)</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>    <span class="c1"># Apply SVD</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>    <span class="n">U</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">Vt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">ratings</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>    <span class="c1"># Keep only top 2 patterns (compressed representation)</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>    <span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>    <span class="n">compressed</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">sigma</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span> <span class="o">@</span> <span class="n">Vt</span><span class="p">[:</span><span class="n">k</span><span class="p">,</span> <span class="p">:]</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original vs Compressed ratings:&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original:&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">ratings</span><span class="p">)</span>
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Compressed (using top 2 patterns):&quot;</span><span class="p">)</span>
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">compressed</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>    <span class="k">return</span> <span class="n">compressed</span>
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="c1"># This shows how we can predict missing ratings using patterns</span>
+</code></pre></div>
+<h3 id="example-3-high-dimensional-distance-problems">Example 3: High-Dimensional Distance Problems</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">dimension_curse_demo</span><span class="p">():</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="sd">    Demonstrate how distance becomes meaningless </span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="sd">    in high dimensions</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dimensions</span><span class="p">:</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="c1"># Generate random points</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>        <span class="n">n_points</span> <span class="o">=</span> <span class="mi">1000</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>        <span class="c1"># Calculate all pairwise distances</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>        <span class="n">distances</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_points</span><span class="p">):</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_points</span><span class="p">):</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>                <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">points</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>                <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Dimension </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean distance: </span><span class="si">{</span><span class="n">distances</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distance std: </span><span class="si">{</span><span class="n">distances</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Relative variation: </span><span class="si">{</span><span class="n">distances</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">/</span><span class="n">distances</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>        <span class="c1"># As dimensions increase, relative variation decreases!</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>        <span class="c1"># Everything becomes equidistant</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="c1"># This shows why we need different similarity measures in high-D</span>
+</code></pre></div>
+<hr />
+<h2 id="common-questions-answered-simply">Common Questions Answered Simply</h2>
+<p><strong>Q: Why is math important for AI? I just want to use ChatGPT.</strong><br />
+<strong>A:</strong> Think of it like driving a car. You don't need to understand every engine part to drive, but knowing basics helps you drive better, troubleshoot problems, and understand why your car behaves certain ways. Same with AI!</p>
+<p><strong>Q: What's the difference between SVD and eigendecomposition?</strong><br />
+<strong>A:</strong> SVD works on any rectangular data table (like Netflix ratings), while eigendecomposition only works on square matrices. SVD is like a universal tool that works everywhere.</p>
+<p><strong>Q: Why do we scale attention scores by <code>1/√d_k</code>?</strong><br />
+<strong>A:</strong> Imagine shouting in a small room vs. a big concert hall. In high dimensions, dot products become like shouting in a concert hall - they get really loud. Scaling helps keep the volume manageable.</p>
+<p><strong>Q: When should I use cosine similarity instead of regular distance?</strong><br />
+<strong>A:</strong> Use cosine similarity when you care about "direction" rather than "size." For example:
+- Document similarity: "cat, cats, kitten" vs "CAT, CATS, KITTEN" should be similar despite different lengths
+- Recommendation systems: Users with same preferences but different rating scales</p>
+<p><strong>Q: How do I know if my data is suitable for compression (low-rank approximation)?</strong><br />
+<strong>A:</strong> Look at your singular values after SVD. If they drop quickly (like 1000, 500, 100, 50, 10, 1, 0.1...), you can compress well. If they decrease slowly, compression won't help much.</p>
+<p><strong>Q: Why does my neural network training become unstable?</strong><br />
+<strong>A:</strong> Often it's a conditioning problem! Your gradients are too sensitive. Try:
+- Smaller learning rates
+- Better optimizers (Adam instead of SGD)
+- Gradient clipping
+- Layer normalization</p>
+<p><strong>Q: What's the intuition behind eigenvectors?</strong><br />
+<strong>A:</strong> They're the "natural directions" of your transformation. Like finding the grain in wood - when you split along the grain (eigenvector), it's easy. Split against it, and it's hard.</p>
+<hr />
+<p><strong>Remember:</strong> Linear algebra isn't just abstract math - it's the language that lets computers understand patterns, make predictions, and generate creative content. Every time AI recognizes your voice, translates text, or recommends a movie, these mathematical tools are working behind the scenes!</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../.." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../01_classic_agents/reflex_agents/" class="md-footer__link md-footer__link--next" aria-label="Next: Simple Reflex Agents">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Simple Reflex Agents
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.footer", "content.code.copy", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>

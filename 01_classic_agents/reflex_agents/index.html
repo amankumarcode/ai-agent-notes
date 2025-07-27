@@ -1,0 +1,2764 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../00_foundations/linear_algebra/">
+      
+      
+        <link rel="next" href="../model_based_reflex_agent/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Simple Reflex Agents - AI-Agent Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#simple-reflex-agents" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="AI-Agent Notes" class="md-header__button md-logo" aria-label="AI-Agent Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI-Agent Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Simple Reflex Agents
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="AI-Agent Notes" class="md-nav__button md-logo" aria-label="AI-Agent Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    AI-Agent Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Foundations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00_foundations/linear_algebra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linear Algebra
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Classic Agents
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Classic Agents
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Simple Reflex Agents
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Simple Reflex Agents
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceptual-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conceptual Foundation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conceptual Foundation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-and-core-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition and Core Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#philosophical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Philosophical Context
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#peas-analysis-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      PEAS Analysis Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PEAS Analysis Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#detailed-peas-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed PEAS Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed PEAS Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-vacuum-world-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Vacuum-World Agent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-thermostat-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Thermostat Agent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-traffic-light-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 3: Traffic Light Controller
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-and-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture and Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture and Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Patterns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rule-based-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Rule-Based Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-enhanced-vacuum-world-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Enhanced Vacuum World Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-continuous-domain-example-obstacle-avoidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Continuous Domain Example: Obstacle Avoidance
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strengths-and-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strengths and Capabilities
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Strengths and Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-computational-efficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Computational Efficiency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-transparency-and-explainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Transparency and Explainability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-design-simplicity" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Design Simplicity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-robustness-in-specific-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Robustness in Specific Scenarios
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Failure Modes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations and Failure Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-partial-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Partial Observability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-noisy-and-uncertain-sensors" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Noisy and Uncertain Sensors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-dynamic-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Dynamic Environments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-scaling-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Scaling Challenges
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-no-learning-or-adaptation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. No Learning or Adaptation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rule-representation-and-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Rule Representation and Organization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Rule Representation and Organization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hierarchical-rule-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hierarchical Rule Structures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-based-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern-Based Rules
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Performance Optimization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rule-compilation-and-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rule Compilation and Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-hybrid-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Hybrid Architectures
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Hybrid Architectures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reflex-components-in-complex-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflex Components in Complex Agents
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modern-applications-and-relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modern Applications and Relevance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modern Applications and Relevance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-microservice-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Microservice Architectures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-edge-computing-and-iot" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Edge Computing and IoT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-safety-critical-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Safety-Critical Systems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-llm-integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. LLM Integration Patterns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparative-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparative Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparative Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reflex-vs-model-based-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflex vs. Model-Based Agents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reflex-vs-goal-based-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflex vs. Goal-Based Agents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reflex-vs-utility-based-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflex vs. Utility-Based Agents
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmarking-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmarking Environments
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-guidelines-and-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Guidelines and Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Guidelines and Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rule-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Rule Design Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Error Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-testing-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Testing and Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises-and-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercises and Extensions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises and Extensions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#programming-exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      Programming Exercises
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theoretical-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Theoretical Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Research Directions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-and-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary and Connections
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q &amp; A
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model_based_reflex_agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Model-Based Reflex Agents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02_llm_primer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LLM Primer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03_transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transformers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04_agent_patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Agent Patterns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05_multi_agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multi-Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06_rag_and_memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    RAG & Memory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Deep Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_deep_learning/backprop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backpropagation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07_deep_learning/autograd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Autograd
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../daily_logs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Daily Logs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      TL;DR
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceptual-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conceptual Foundation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conceptual Foundation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-and-core-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition and Core Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#philosophical-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Philosophical Context
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#peas-analysis-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      PEAS Analysis Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PEAS Analysis Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#detailed-peas-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed PEAS Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detailed PEAS Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-vacuum-world-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Vacuum-World Agent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-thermostat-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Thermostat Agent
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-traffic-light-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 3: Traffic Light Controller
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-and-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture and Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture and Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Patterns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rule-based-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Rule-Based Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-enhanced-vacuum-world-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Enhanced Vacuum World Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-continuous-domain-example-obstacle-avoidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Continuous Domain Example: Obstacle Avoidance
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#strengths-and-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strengths and Capabilities
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Strengths and Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-computational-efficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Computational Efficiency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-transparency-and-explainability" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Transparency and Explainability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-design-simplicity" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Design Simplicity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-robustness-in-specific-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Robustness in Specific Scenarios
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Failure Modes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations and Failure Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-partial-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Partial Observability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-noisy-and-uncertain-sensors" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Noisy and Uncertain Sensors
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-dynamic-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Dynamic Environments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-scaling-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Scaling Challenges
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-no-learning-or-adaptation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. No Learning or Adaptation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rule-representation-and-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Rule Representation and Organization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Rule Representation and Organization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hierarchical-rule-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hierarchical Rule Structures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-based-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pattern-Based Rules
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Performance Optimization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rule-compilation-and-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rule Compilation and Optimization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-hybrid-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Hybrid Architectures
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Hybrid Architectures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reflex-components-in-complex-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflex Components in Complex Agents
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modern-applications-and-relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modern Applications and Relevance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modern Applications and Relevance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-microservice-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Microservice Architectures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-edge-computing-and-iot" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Edge Computing and IoT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-safety-critical-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Safety-Critical Systems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-llm-integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. LLM Integration Patterns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparative-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparative Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparative Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reflex-vs-model-based-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflex vs. Model-Based Agents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reflex-vs-goal-based-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflex vs. Goal-Based Agents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reflex-vs-utility-based-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflex vs. Utility-Based Agents
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmarking-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmarking Environments
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-guidelines-and-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Guidelines and Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Guidelines and Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rule-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Rule Design Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Error Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-testing-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Testing and Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises-and-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exercises and Extensions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises and Extensions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#programming-exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      Programming Exercises
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theoretical-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Theoretical Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Research Directions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-and-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary and Connections
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#q-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Q &amp; A
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="simple-reflex-agents">Simple Reflex Agents</h1>
+<p><strong>Updated:</strong> 2025-07-23</p>
+<h2 id="tldr">TL;DR</h2>
+<ul>
+<li><strong>Stimulus → action table</strong>: Decisions are hard-coded condition–action rules with no deliberation</li>
+<li><strong>No internal state</strong>: The agent perceives only the current environment snapshot, making decisions memoryless</li>
+<li><strong>Cheap and fast</strong> but brittle; fails catastrophically when perception is partial, noisy, or incomplete</li>
+<li><strong>Foundational baseline</strong> for understanding more sophisticated architectures: model-based, goal-based, and utility-based agents</li>
+<li><strong>Still relevant</strong> in modern systems as micro-components within larger intelligent architectures</li>
+</ul>
+<hr />
+<h2 id="conceptual-foundation">Conceptual Foundation</h2>
+<h3 id="definition-and-core-principles">Definition and Core Principles</h3>
+<p>A <strong>simple reflex agent</strong> represents the most elementary form of rational agent behavior, operating on the principle of <strong>stimulus-response mapping</strong>. These agents implement a direct mapping from percept sequences to actions without any form of internal reasoning, planning, or state maintenance.</p>
+<p><strong>Formal Definition:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Agent: Percept → Action
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>f: P → A where f is a predetermined function
+</code></pre></div></p>
+<p>The agent function <code>f</code> is typically implemented as:
+1. <strong>Condition-action rules</strong> (production rules)
+2. <strong>Lookup tables</strong> for discrete state spaces
+3. <strong>Simple reactive functions</strong> for continuous domains</p>
+<h3 id="philosophical-context">Philosophical Context</h3>
+<p>Simple reflex agents embody the <strong>behaviorist approach</strong> to intelligence, reminiscent of stimulus-response theories in psychology. They represent the computational equivalent of reflexive behaviors observed in biological systems - immediate, automatic responses to environmental stimuli without conscious deliberation.</p>
+<p>This approach contrasts sharply with <strong>cognitive architectures</strong> that maintain internal models, engage in planning, or exhibit learning behaviors. Understanding reflex agents provides crucial insight into the baseline capabilities and fundamental limitations that motivated the development of more sophisticated agent architectures.</p>
+<hr />
+<h2 id="peas-analysis-framework">PEAS Analysis Framework</h2>
+<p>The PEAS (Performance, Environment, Actuators, Sensors) framework provides a systematic approach to analyzing agent design requirements.</p>
+<h3 id="detailed-peas-examples">Detailed PEAS Examples</h3>
+<h4 id="example-1-vacuum-world-agent">Example 1: Vacuum-World Agent</h4>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Specification</th>
+<th>Design Implications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Performance</strong></td>
+<td>• Squares cleaned per time unit<br/>• Energy consumption minimization<br/>• Wear-and-tear on actuators</td>
+<td>Requires trade-off between thoroughness and efficiency</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td>• 2×N grid world<br/>• Dirt appears stochastically<br/>• Static topology</td>
+<td>Finite state space enables complete rule enumeration</td>
+</tr>
+<tr>
+<td><strong>Actuators</strong></td>
+<td>• <code>MOVE_LEFT</code>, <code>MOVE_RIGHT</code><br/>• <code>MOVE_UP</code>, <code>MOVE_DOWN</code><br/>• <code>SUCK</code></td>
+<td>Limited action space simplifies control logic</td>
+</tr>
+<tr>
+<td><strong>Sensors</strong></td>
+<td>• Current location (discrete)<br/>• Dirt presence (boolean)</td>
+<td>Perfect local observability but no global information</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example-2-thermostat-agent">Example 2: Thermostat Agent</h4>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Specification</th>
+<th>Design Implications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Performance</strong></td>
+<td>• Temperature stability (±1°F)<br/>• Energy efficiency<br/>• User comfort maintenance</td>
+<td>Requires hysteresis to avoid oscillation</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td>• Room with thermal dynamics<br/>• External temperature variations<br/>• Heat sources and sinks</td>
+<td>Continuous state space with time delays</td>
+</tr>
+<tr>
+<td><strong>Actuators</strong></td>
+<td>• Heater ON/OFF<br/>• AC ON/OFF<br/>• Fan speed control</td>
+<td>Binary/discrete control in continuous domain</td>
+</tr>
+<tr>
+<td><strong>Sensors</strong></td>
+<td>• Temperature sensor<br/>• Humidity sensor (optional)<br/>• Occupancy sensor (optional)</td>
+<td>Sensor noise affects rule thresholds</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example-3-traffic-light-controller">Example 3: Traffic Light Controller</h4>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Specification</th>
+<th>Design Implications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Performance</strong></td>
+<td>• Traffic throughput maximization<br/>• Safety (accident prevention)<br/>• Fairness across directions</td>
+<td>Multiple competing objectives require prioritization</td>
+</tr>
+<tr>
+<td><strong>Environment</strong></td>
+<td>• Intersection with 4 directions<br/>• Variable traffic patterns<br/>• Emergency vehicle priority</td>
+<td>Temporal dependencies challenge pure reflexive behavior</td>
+</tr>
+<tr>
+<td><strong>Actuators</strong></td>
+<td>• Light state changes<br/>• Pedestrian signals<br/>• Emergency preemption</td>
+<td>Safety-critical timing constraints</td>
+</tr>
+<tr>
+<td><strong>Sensors</strong></td>
+<td>• Vehicle detection loops<br/>• Pedestrian buttons<br/>• Emergency vehicle signals</td>
+<td>Multiple sensor modalities with different reliabilities</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="architecture-and-implementation">Architecture and Implementation</h2>
+<h3 id="core-architecture">Core Architecture</h3>
+<pre class="mermaid"><code>graph TB
+    ENV[Environment] --&gt;|Percept| SENS[Sensors]
+    SENS --&gt; PROC[Percept Processing]
+    PROC --&gt; RULES[Condition-Action Rules]
+    RULES --&gt; ACT[Action Selection]
+    ACT --&gt; ACTU[Actuators]
+    ACTU --&gt;|Action| ENV
+
+    subgraph "Agent Boundary"
+        SENS
+        PROC
+        RULES
+        ACT
+        ACTU
+    end
+
+    style RULES fill:#e1f5fe
+    style ENV fill:#f3e5f5</code></pre>
+<h3 id="implementation-patterns">Implementation Patterns</h3>
+<h4 id="1-rule-based-implementation">1. Rule-Based Implementation</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleReflexAgent</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rules</span><span class="p">):</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="sd">        Initialize with condition-action rules.</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="sd">        Args:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="sd">            rules: Dict mapping percept tuples to actions</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span> <span class="o">=</span> <span class="n">rules</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">performance_measure</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">action_count</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">perceive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">):</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract relevant features from environment state.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="c1"># In practice, this might involve sensor fusion,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="c1"># noise filtering, or feature extraction</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="k">return</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_percept</span><span class="p">()</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percept</span><span class="p">):</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Map percept directly to action via rule lookup.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">action_count</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">percept</span><span class="p">,</span> <span class="s2">&quot;NO-OP&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">environment</span><span class="p">):</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute action and update performance measure.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">execute_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">performance_measure</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_outcome</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        <span class="k">return</span> <span class="n">result</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate_outcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Simple performance evaluation.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        <span class="c1"># Implementation depends on specific domain</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>        <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+</code></pre></div>
+<h4 id="2-enhanced-vacuum-world-implementation">2. Enhanced Vacuum World Implementation</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">VacuumReflexAgent</span><span class="p">(</span><span class="n">SimpleReflexAgent</span><span class="p">):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="c1"># Comprehensive rule set for vacuum world</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="n">rules</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>            <span class="c1"># Format: (location, dirt_present, battery_level) -&gt; action</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;HIGH&quot;</span><span class="p">):</span> <span class="s2">&quot;SUCK&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;LOW&quot;</span><span class="p">):</span> <span class="s2">&quot;SUCK&quot;</span><span class="p">,</span>  <span class="c1"># Prioritize cleaning</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;HIGH&quot;</span><span class="p">):</span> <span class="s2">&quot;RIGHT&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>            <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;LOW&quot;</span><span class="p">):</span> <span class="s2">&quot;RECHARGE&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>            <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;HIGH&quot;</span><span class="p">):</span> <span class="s2">&quot;SUCK&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>            <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;LOW&quot;</span><span class="p">):</span> <span class="s2">&quot;SUCK&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>            <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;HIGH&quot;</span><span class="p">):</span> <span class="s2">&quot;LEFT&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>            <span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;LOW&quot;</span><span class="p">):</span> <span class="s2">&quot;RECHARGE&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>            <span class="p">(</span><span class="s2">&quot;DOCK&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;LOW&quot;</span><span class="p">):</span> <span class="s2">&quot;RECHARGE&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>            <span class="p">(</span><span class="s2">&quot;DOCK&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;HIGH&quot;</span><span class="p">):</span> <span class="s2">&quot;LEFT&quot;</span><span class="p">,</span>  <span class="c1"># Resume cleaning</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="p">}</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">squares_cleaned</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">energy_consumed</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">perceive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">):</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Enhanced perception with battery monitoring.&quot;&quot;&quot;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>        <span class="n">base_percept</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">perceive</span><span class="p">(</span><span class="n">environment</span><span class="p">)</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="n">battery_level</span> <span class="o">=</span> <span class="s2">&quot;HIGH&quot;</span> <span class="k">if</span> <span class="n">environment</span><span class="o">.</span><span class="n">battery</span> <span class="o">&gt;</span> <span class="mf">0.3</span> <span class="k">else</span> <span class="s2">&quot;LOW&quot;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">base_percept</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">base_percept</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">battery_level</span><span class="p">)</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate_outcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Domain-specific performance evaluation.&quot;&quot;&quot;</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;SUCK&quot;</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">dirt_removed</span><span class="p">:</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>            <span class="n">score</span> <span class="o">+=</span> <span class="mi">10</span>  <span class="c1"># Primary objective</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">squares_cleaned</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>        <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">action</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LEFT&quot;</span><span class="p">,</span> <span class="s2">&quot;RIGHT&quot;</span><span class="p">]:</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>            <span class="n">score</span> <span class="o">-=</span> <span class="mi">1</span>   <span class="c1"># Movement cost</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>        <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;RECHARGE&quot;</span><span class="p">:</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>            <span class="n">score</span> <span class="o">-=</span> <span class="mi">2</span>   <span class="c1"># Recharging cost</span>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">energy_consumed</span> <span class="o">+=</span> <span class="n">result</span><span class="o">.</span><span class="n">energy_cost</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>        <span class="k">return</span> <span class="n">score</span>
+</code></pre></div>
+<h4 id="3-continuous-domain-example-obstacle-avoidance">3. Continuous Domain Example: Obstacle Avoidance</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">ObstacleAvoidanceAgent</span><span class="p">(</span><span class="n">SimpleReflexAgent</span><span class="p">):</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">safe_distance</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">safe_distance</span> <span class="o">=</span> <span class="n">safe_distance</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="c1"># Rules are implicit in the decision function</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">({})</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">perceive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">):</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Perceive obstacles via distance sensors.&quot;&quot;&quot;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>            <span class="s1">&#39;front&#39;</span><span class="p">:</span> <span class="n">environment</span><span class="o">.</span><span class="n">distance_to_obstacle</span><span class="p">(</span><span class="s1">&#39;front&#39;</span><span class="p">),</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>            <span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">environment</span><span class="o">.</span><span class="n">distance_to_obstacle</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">),</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>            <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">environment</span><span class="o">.</span><span class="n">distance_to_obstacle</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">),</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>            <span class="s1">&#39;speed&#39;</span><span class="p">:</span> <span class="n">environment</span><span class="o">.</span><span class="n">current_speed</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        <span class="p">}</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percept</span><span class="p">):</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Reactive obstacle avoidance using potential fields.&quot;&quot;&quot;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        <span class="n">front_dist</span> <span class="o">=</span> <span class="n">percept</span><span class="p">[</span><span class="s1">&#39;front&#39;</span><span class="p">]</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        <span class="n">left_dist</span> <span class="o">=</span> <span class="n">percept</span><span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">]</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        <span class="n">right_dist</span> <span class="o">=</span> <span class="n">percept</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        <span class="c1"># Simple reflex rules for obstacle avoidance</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        <span class="k">if</span> <span class="n">front_dist</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">safe_distance</span><span class="p">:</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>            <span class="k">if</span> <span class="n">left_dist</span> <span class="o">&gt;</span> <span class="n">right_dist</span><span class="p">:</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>                <span class="k">return</span> <span class="s2">&quot;TURN_LEFT&quot;</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>            <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>                <span class="k">return</span> <span class="s2">&quot;TURN_RIGHT&quot;</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>        <span class="k">elif</span> <span class="n">front_dist</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">safe_distance</span><span class="p">:</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>            <span class="k">return</span> <span class="s2">&quot;SLOW_DOWN&quot;</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>            <span class="k">return</span> <span class="s2">&quot;MOVE_FORWARD&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="strengths-and-capabilities">Strengths and Capabilities</h2>
+<h3 id="1-computational-efficiency">1. Computational Efficiency</h3>
+<p><strong>Time Complexity</strong>: O(1) decision making regardless of environment complexity
+- <strong>Lookup table</strong>: Direct indexing provides constant-time access
+- <strong>Rule evaluation</strong>: Sequential rule matching with early termination
+- <strong>Memory usage</strong>: Minimal memory footprint for rule storage</p>
+<p><strong>Real-time Performance</strong>: Suitable for time-critical applications
+- <strong>Deterministic response time</strong>: Predictable worst-case execution time
+- <strong>No search overhead</strong>: Unlike planning-based agents
+- <strong>Hardware implementation</strong>: Can be implemented in simple embedded systems</p>
+<h3 id="2-transparency-and-explainability">2. Transparency and Explainability</h3>
+<p><strong>Complete Interpretability</strong>: Every decision can be traced to a specific rule
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">explain_decision</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">percept</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide explanation for agent&#39;s decision.&quot;&quot;&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">rule</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">percept</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Given percept </span><span class="si">{</span><span class="n">percept</span><span class="si">}</span><span class="s2">, rule &#39;</span><span class="si">{</span><span class="n">percept</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s2">&#39; was applied&quot;</span>
+</code></pre></div></p>
+<p><strong>Verification and Validation</strong>: 
+- <strong>Formal verification</strong>: Rule sets can be formally analyzed for completeness and consistency
+- <strong>Safety analysis</strong>: Critical rules can be verified against safety properties
+- <strong>Regulatory compliance</strong>: Transparent decision logic aids regulatory approval</p>
+<h3 id="3-design-simplicity">3. Design Simplicity</h3>
+<p><strong>Implementation Ease</strong>: Minimal complexity for well-defined domains
+- <strong>No learning algorithms</strong>: Avoids complexity of training procedures
+- <strong>No state management</strong>: Eliminates bugs related to state inconsistency
+- <strong>Modular rules</strong>: Easy to add, remove, or modify individual rules</p>
+<h3 id="4-robustness-in-specific-scenarios">4. Robustness in Specific Scenarios</h3>
+<p><strong>Sensor Failure Handling</strong>: Can incorporate default behaviors
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">robust_perceive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">):</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Perception with sensor failure handling.&quot;&quot;&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="k">return</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_percept</span><span class="p">()</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="k">except</span> <span class="n">SensorFailure</span><span class="p">:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_percept</span>  <span class="c1"># Safe fallback</span>
+</code></pre></div></p>
+<hr />
+<h2 id="limitations-and-failure-modes">Limitations and Failure Modes</h2>
+<h3 id="1-partial-observability">1. Partial Observability</h3>
+<p><strong>Problem</strong>: Agents cannot maintain information about unobserved parts of the environment.</p>
+<p><strong>Example</strong>: A vacuum agent cannot remember which rooms it has already cleaned
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># This fails - no memory of visited locations</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">current_percept</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># Clean room A</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">action</span> <span class="o">=</span> <span class="n">rules</span><span class="p">[</span><span class="n">current_percept</span><span class="p">]</span>  <span class="c1"># &quot;RIGHT&quot; </span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Agent moves to B, then back to A</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Will re-clean A unnecessarily because it forgot it was already clean</span>
+</code></pre></div></p>
+<p><strong>Consequences</strong>:
+- <strong>Infinite loops</strong>: Agent may cycle between locations
+- <strong>Inefficient behavior</strong>: Redundant actions in large environments
+- <strong>Inability to handle temporal dependencies</strong>: Cannot coordinate actions over time</p>
+<h3 id="2-noisy-and-uncertain-sensors">2. Noisy and Uncertain Sensors</h3>
+<p><strong>Problem</strong>: Real-world sensors provide imperfect information</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Brittle rule that fails with sensor noise</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">rules</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span> <span class="s2">&quot;SUCK&quot;</span><span class="p">,</span>   <span class="c1"># Works only if dirt detection is perfect</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span> <span class="s2">&quot;RIGHT&quot;</span>  <span class="c1"># May miss dirt due to sensor noise</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">}</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Robust alternative requires probabilistic reasoning</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># which exceeds simple reflex capabilities</span>
+</code></pre></div>
+<p><strong>Failure Scenarios</strong>:
+- <strong>False positives</strong>: Acting on phantom percepts
+- <strong>False negatives</strong>: Missing important environmental features
+- <strong>Sensor drift</strong>: Rules become invalid as sensors age</p>
+<h3 id="3-dynamic-environments">3. Dynamic Environments</h3>
+<p><strong>Problem</strong>: Rule sets become obsolete as environments change</p>
+<p><strong>Example</strong>: Traffic patterns changing due to construction
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Rules optimized for normal traffic</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">traffic_rules</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="p">(</span><span class="s2">&quot;peak_hour&quot;</span><span class="p">,</span> <span class="s2">&quot;heavy_traffic&quot;</span><span class="p">):</span> <span class="s2">&quot;EXTEND_GREEN&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="p">(</span><span class="s2">&quot;off_peak&quot;</span><span class="p">,</span> <span class="s2">&quot;light_traffic&quot;</span><span class="p">):</span> <span class="s2">&quot;NORMAL_TIMING&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">}</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Fails when construction reroutes traffic</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># New patterns not captured in original rule set</span>
+</code></pre></div></p>
+<h3 id="4-scaling-challenges">4. Scaling Challenges</h3>
+<p><strong>State Space Explosion</strong>: Rule sets grow exponentially with percept dimensionality
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>n boolean sensors → 2^n possible percepts → 2^n rules needed
+</code></pre></div></p>
+<p><strong>Example</strong>:
+- 5 sensors: 32 rules
+- 10 sensors: 1,024 rules<br />
+- 20 sensors: 1,048,576 rules</p>
+<p><strong>Maintenance Complexity</strong>: 
+- <strong>Rule conflicts</strong>: Overlapping conditions leading to ambiguous behavior
+- <strong>Incomplete coverage</strong>: Missing rules for edge cases
+- <strong>Testing complexity</strong>: Exponential test case requirements</p>
+<h3 id="5-no-learning-or-adaptation">5. No Learning or Adaptation</h3>
+<p><strong>Static Behavior</strong>: Cannot improve performance through experience
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Agent repeats same mistakes indefinitely</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">for</span> <span class="n">episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">percept</span> <span class="o">=</span> <span class="n">environment</span><span class="o">.</span><span class="n">get_percept</span><span class="p">()</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">action</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="n">percept</span><span class="p">)</span>  <span class="c1"># Same rules every time</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">environment</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="c1"># No learning from outcomes</span>
+</code></pre></div></p>
+<p><strong>Missed Optimization Opportunities</strong>:
+- Cannot discover more efficient action sequences
+- Cannot adapt to user preferences
+- Cannot handle novel situations not anticipated by designers</p>
+<hr />
+<h2 id="advanced-considerations">Advanced Considerations</h2>
+<h3 id="1-rule-representation-and-organization">1. Rule Representation and Organization</h3>
+<h4 id="hierarchical-rule-structures">Hierarchical Rule Structures</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">HierarchicalReflexAgent</span><span class="p">:</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">priority_rules</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>            <span class="c1"># Safety rules (highest priority)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>            <span class="s2">&quot;EMERGENCY&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;obstacle_detected&quot;</span><span class="p">:</span> <span class="s2">&quot;STOP&quot;</span><span class="p">},</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>            <span class="c1"># Task rules (medium priority)</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>            <span class="s2">&quot;TASK&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;goal_visible&quot;</span><span class="p">:</span> <span class="s2">&quot;APPROACH&quot;</span><span class="p">},</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>            <span class="c1"># Maintenance rules (lowest priority)  </span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>            <span class="s2">&quot;MAINTENANCE&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;battery_low&quot;</span><span class="p">:</span> <span class="s2">&quot;RECHARGE&quot;</span><span class="p">}</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        <span class="p">}</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percept</span><span class="p">):</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        <span class="c1"># Check rules in priority order</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        <span class="k">for</span> <span class="n">priority</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;EMERGENCY&quot;</span><span class="p">,</span> <span class="s2">&quot;TASK&quot;</span><span class="p">,</span> <span class="s2">&quot;MAINTENANCE&quot;</span><span class="p">]:</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>            <span class="k">for</span> <span class="n">condition</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority_rules</span><span class="p">[</span><span class="n">priority</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_condition</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">percept</span><span class="p">):</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>                    <span class="k">return</span> <span class="n">action</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>        <span class="k">return</span> <span class="s2">&quot;NO-OP&quot;</span>
+</code></pre></div>
+<h4 id="pattern-based-rules">Pattern-Based Rules</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">PatternReflexAgent</span><span class="p">:</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">pattern_rules</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>            <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;emergency.*&quot;</span><span class="p">),</span> <span class="s2">&quot;EMERGENCY_STOP&quot;</span><span class="p">),</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>            <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;target_.*_visible&quot;</span><span class="p">),</span> <span class="s2">&quot;APPROACH&quot;</span><span class="p">),</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>            <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;.*_blocked&quot;</span><span class="p">),</span> <span class="s2">&quot;FIND_ALTERNATIVE&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>        <span class="p">]</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percept_string</span><span class="p">):</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>        <span class="k">for</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern_rules</span><span class="p">:</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>            <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">percept_string</span><span class="p">):</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>                <span class="k">return</span> <span class="n">action</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>        <span class="k">return</span> <span class="s2">&quot;DEFAULT_ACTION&quot;</span>
+</code></pre></div>
+<h3 id="2-performance-optimization">2. Performance Optimization</h3>
+<h4 id="rule-compilation-and-optimization">Rule Compilation and Optimization</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">OptimizedReflexAgent</span><span class="p">:</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rules</span><span class="p">):</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="c1"># Compile rules into decision tree for O(log n) lookup</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">decision_tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compile_rules</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">rule_usage_stats</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">compile_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rules</span><span class="p">):</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert rule table to optimized decision tree.&quot;&quot;&quot;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>        <span class="c1"># Implementation would build binary decision tree</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>        <span class="c1"># to minimize expected lookup time</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>        <span class="k">pass</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percept</span><span class="p">):</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>        <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decision_tree</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">percept</span><span class="p">)</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>        <span class="c1"># Track rule usage for optimization</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>        <span class="n">rule_key</span> <span class="o">=</span> <span class="p">(</span><span class="n">percept</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">rule_usage_stats</span><span class="p">[</span><span class="n">rule_key</span><span class="p">]</span> <span class="o">=</span> \
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">rule_usage_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">rule_key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>        <span class="k">return</span> <span class="n">action</span>
+</code></pre></div>
+<h3 id="3-hybrid-architectures">3. Hybrid Architectures</h3>
+<h4 id="reflex-components-in-complex-agents">Reflex Components in Complex Agents</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">HybridAgent</span><span class="p">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">reflex_layer</span> <span class="o">=</span> <span class="n">SimpleReflexAgent</span><span class="p">(</span><span class="n">emergency_rules</span><span class="p">)</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">deliberative_layer</span> <span class="o">=</span> <span class="n">PlanningAgent</span><span class="p">()</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">learning_layer</span> <span class="o">=</span> <span class="n">ReinforcementLearner</span><span class="p">()</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">decide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percept</span><span class="p">):</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        <span class="c1"># Emergency reflexes take precedence</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>        <span class="n">emergency_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reflex_layer</span><span class="o">.</span><span class="n">decide</span><span class="p">(</span><span class="n">percept</span><span class="p">)</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>        <span class="k">if</span> <span class="n">emergency_action</span> <span class="o">!=</span> <span class="s2">&quot;NO-OP&quot;</span><span class="p">:</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>            <span class="k">return</span> <span class="n">emergency_action</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>        <span class="c1"># Fall back to deliberative planning</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>        <span class="n">planned_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deliberative_layer</span><span class="o">.</span><span class="n">plan</span><span class="p">(</span><span class="n">percept</span><span class="p">)</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>        <span class="k">if</span> <span class="n">planned_action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>            <span class="k">return</span> <span class="n">planned_action</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>        <span class="c1"># Use learned policy as last resort</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_layer</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">percept</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="modern-applications-and-relevance">Modern Applications and Relevance</h2>
+<h3 id="1-microservice-architectures">1. Microservice Architectures</h3>
+<p>In modern distributed systems, simple reflex agents serve as <strong>reactive microservices</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># API Gateway with reflex-based routing</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">routing_rules</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;/api/auth&quot;</span><span class="p">):</span> <span class="s2">&quot;auth_service&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/api/users&quot;</span><span class="p">):</span> <span class="s2">&quot;user_service&quot;</span><span class="p">,</span> 
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;/api/orders&quot;</span><span class="p">):</span> <span class="s2">&quot;order_service&quot;</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">}</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="k">def</span><span class="w"> </span><span class="nf">route_request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    <span class="k">return</span> <span class="n">routing_rules</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="n">method</span><span class="p">,</span> <span class="n">path</span><span class="p">),</span> <span class="s2">&quot;default_service&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="2-edge-computing-and-iot">2. Edge Computing and IoT</h3>
+<p><strong>Resource-constrained devices</strong> benefit from reflex agents' minimal overhead:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># IoT sensor with reflex-based data transmission</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">IoTSensorAgent</span><span class="p">:</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">transmission_rules</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>            <span class="p">(</span><span class="s2">&quot;critical&quot;</span><span class="p">,</span> <span class="s2">&quot;connected&quot;</span><span class="p">):</span> <span class="s2">&quot;TRANSMIT_IMMEDIATELY&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>            <span class="p">(</span><span class="s2">&quot;normal&quot;</span><span class="p">,</span> <span class="s2">&quot;connected&quot;</span><span class="p">):</span> <span class="s2">&quot;BATCH_TRANSMIT&quot;</span><span class="p">,</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>            <span class="p">(</span><span class="s2">&quot;any&quot;</span><span class="p">,</span> <span class="s2">&quot;disconnected&quot;</span><span class="p">):</span> <span class="s2">&quot;STORE_LOCALLY&quot;</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>        <span class="p">}</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_sensor_reading</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reading</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">):</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>        <span class="n">priority</span> <span class="o">=</span> <span class="s2">&quot;critical&quot;</span> <span class="k">if</span> <span class="n">reading</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">threshold</span> <span class="k">else</span> <span class="s2">&quot;normal&quot;</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;connected&quot;</span> <span class="k">if</span> <span class="n">connectivity</span><span class="o">.</span><span class="n">is_online</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;disconnected&quot;</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_rules</span><span class="p">[(</span><span class="n">priority</span><span class="p">,</span> <span class="n">status</span><span class="p">)]</span>
+</code></pre></div>
+<h3 id="3-safety-critical-systems">3. Safety-Critical Systems</h3>
+<p><strong>Reflex agents provide fail-safe behaviors</strong> in safety-critical applications:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Nuclear reactor safety system</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">safety_rules</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="p">(</span><span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="s2">&quot;CRITICAL&quot;</span><span class="p">):</span> <span class="s2">&quot;EMERGENCY_SHUTDOWN&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="p">(</span><span class="s2">&quot;pressure&quot;</span><span class="p">,</span> <span class="s2">&quot;HIGH&quot;</span><span class="p">):</span> <span class="s2">&quot;RELEASE_PRESSURE&quot;</span><span class="p">,</span> 
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="p">(</span><span class="s2">&quot;radiation&quot;</span><span class="p">,</span> <span class="s2">&quot;ELEVATED&quot;</span><span class="p">):</span> <span class="s2">&quot;SEAL_CONTAINMENT&quot;</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="p">}</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1"># These rules must be simple, verifiable, and reliable</span>
+</code></pre></div>
+<h3 id="4-llm-integration-patterns">4. LLM Integration Patterns</h3>
+<p>Modern AI systems integrate reflex agents as <strong>safety filters</strong> and <strong>response modulators</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LLMSafetyWrapper</span><span class="p">:</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">llm_model</span><span class="p">):</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">llm</span> <span class="o">=</span> <span class="n">llm_model</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">safety_reflexes</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>            <span class="s2">&quot;harmful_content_detected&quot;</span><span class="p">:</span> <span class="s2">&quot;REFUSE_RESPONSE&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>            <span class="s2">&quot;personal_info_requested&quot;</span><span class="p">:</span> <span class="s2">&quot;REDIRECT_TO_PRIVACY&quot;</span><span class="p">,</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>            <span class="s2">&quot;off_topic_query&quot;</span><span class="p">:</span> <span class="s2">&quot;REDIRECT_TO_SCOPE&quot;</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>        <span class="p">}</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">generate_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">):</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>        <span class="c1"># Quick reflex check before expensive LLM inference</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>        <span class="n">safety_assessment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assess_safety</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>        <span class="n">reflex_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">safety_reflexes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">safety_assessment</span><span class="p">)</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>        <span class="k">if</span> <span class="n">reflex_action</span><span class="p">:</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_safety_action</span><span class="p">(</span><span class="n">reflex_action</span><span class="p">)</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>        <span class="c1"># Proceed with full LLM generation</span>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="comparative-analysis">Comparative Analysis</h2>
+<h3 id="reflex-vs-model-based-agents">Reflex vs. Model-Based Agents</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Simple Reflex</th>
+<th>Model-Based Reflex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Memory</strong></td>
+<td>None</td>
+<td>Maintains internal state</td>
+</tr>
+<tr>
+<td><strong>Perception</strong></td>
+<td>Current only</td>
+<td>Current + history</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>O(1)</td>
+<td>O(state_size)</td>
+</tr>
+<tr>
+<td><strong>Flexibility</strong></td>
+<td>Low</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><strong>Example</strong></td>
+<td>Thermostat</td>
+<td>Robot with world model</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reflex-vs-goal-based-agents">Reflex vs. Goal-Based Agents</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Simple Reflex</th>
+<th>Goal-Based</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Planning</strong></td>
+<td>None</td>
+<td>Search-based</td>
+</tr>
+<tr>
+<td><strong>Adaptability</strong></td>
+<td>None</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Computation</strong></td>
+<td>Minimal</td>
+<td>Intensive</td>
+</tr>
+<tr>
+<td><strong>Optimality</strong></td>
+<td>Not guaranteed</td>
+<td>Depends on search</td>
+</tr>
+<tr>
+<td><strong>Example</strong></td>
+<td>Traffic light</td>
+<td>Route planning</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reflex-vs-utility-based-agents">Reflex vs. Utility-Based Agents</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Simple Reflex</th>
+<th>Utility-Based</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Decision Criterion</strong></td>
+<td>Rule matching</td>
+<td>Utility maximization</td>
+</tr>
+<tr>
+<td><strong>Trade-offs</strong></td>
+<td>None</td>
+<td>Explicit</td>
+</tr>
+<tr>
+<td><strong>Uncertainty</strong></td>
+<td>Ignored</td>
+<td>Handled via expected utility</td>
+</tr>
+<tr>
+<td><strong>Learning</strong></td>
+<td>None</td>
+<td>Can learn utility functions</td>
+</tr>
+<tr>
+<td><strong>Example</strong></td>
+<td>Smoke detector</td>
+<td>Investment advisor</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="evaluation-metrics">Evaluation Metrics</h2>
+<h3 id="performance-measures">Performance Measures</h3>
+<ol>
+<li><strong>Response Time</strong>: Time from percept to action</li>
+<li><strong>Action Accuracy</strong>: Percentage of correct actions</li>
+<li><strong>Rule Coverage</strong>: Fraction of percept space covered by rules</li>
+<li><strong>Rule Conflicts</strong>: Number of ambiguous situations</li>
+</ol>
+<h3 id="benchmarking-environments">Benchmarking Environments</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ReflexAgentBenchmark</span><span class="p">:</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">test_environments</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>            <span class="n">VacuumWorld</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>            <span class="n">GridWorld</span><span class="p">(</span><span class="n">obstacles</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>            <span class="n">ContinuousControl</span><span class="p">(</span><span class="n">noise_level</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>        <span class="p">]</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">episodes</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>        <span class="k">for</span> <span class="n">env</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_environments</span><span class="p">:</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>            <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">episodes</span><span class="p">):</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>                <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_episode</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>                <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>            <span class="n">results</span><span class="p">[</span><span class="n">env</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>                <span class="s1">&#39;mean_score&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>                <span class="s1">&#39;std_score&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>                <span class="s1">&#39;success_rate&#39;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">)</span> <span class="o">/</span> <span class="n">episodes</span>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>            <span class="p">}</span>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>        <span class="k">return</span> <span class="n">results</span>
+</code></pre></div>
+<hr />
+<h2 id="design-guidelines-and-best-practices">Design Guidelines and Best Practices</h2>
+<h3 id="1-rule-design-principles">1. Rule Design Principles</h3>
+<p><strong>Completeness</strong>: Ensure rules cover all possible percepts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_rule_completeness</span><span class="p">(</span><span class="n">rules</span><span class="p">,</span> <span class="n">percept_space</span><span class="p">):</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if rules cover entire percept space.&quot;&quot;&quot;</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="n">covered</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="n">total</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">percept_space</span><span class="p">)</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="n">missing</span> <span class="o">=</span> <span class="n">total</span> <span class="o">-</span> <span class="n">covered</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Missing rules for percepts: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</code></pre></div></p>
+<p><strong>Consistency</strong>: Avoid conflicting rules
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_rule_consistency</span><span class="p">(</span><span class="n">rules</span><span class="p">):</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Detect potential rule conflicts.&quot;&quot;&quot;</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">conflicts</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="k">for</span> <span class="n">percept</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rules</span><span class="p">[</span><span class="n">percept</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>            <span class="n">conflicts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ambiguous rules for </span><span class="si">{</span><span class="n">percept</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>    <span class="k">return</span> <span class="n">conflicts</span>
+</code></pre></div></p>
+<p><strong>Minimalism</strong>: Use the smallest rule set that achieves objectives
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">minimize_rule_set</span><span class="p">(</span><span class="n">rules</span><span class="p">,</span> <span class="n">test_cases</span><span class="p">):</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove redundant rules while maintaining performance.&quot;&quot;&quot;</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>    <span class="n">essential_rules</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="k">for</span> <span class="n">rule_key</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">rules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>        <span class="c1"># Test if removing this rule affects performance</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>        <span class="n">temp_rules</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">rules</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">rule_key</span><span class="p">}</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>        <span class="k">if</span> <span class="n">evaluate_performance</span><span class="p">(</span><span class="n">temp_rules</span><span class="p">,</span> <span class="n">test_cases</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">:</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>            <span class="n">essential_rules</span><span class="p">[</span><span class="n">rule_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>    <span class="k">return</span> <span class="n">essential_rules</span>
+</code></pre></div></p>
+<h3 id="2-error-handling">2. Error Handling</h3>
+<p><strong>Graceful Degradation</strong>: Handle unexpected percepts
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">robust_reflex_agent</span><span class="p">(</span><span class="n">percept</span><span class="p">,</span> <span class="n">rules</span><span class="p">,</span> <span class="n">default_action</span><span class="o">=</span><span class="s2">&quot;WAIT&quot;</span><span class="p">):</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Reflex agent with fallback behavior.&quot;&quot;&quot;</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    <span class="k">if</span> <span class="n">percept</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>        <span class="k">return</span> <span class="n">rules</span><span class="p">[</span><span class="n">percept</span><span class="p">]</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>        <span class="c1"># Log unexpected percept for rule refinement</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>        <span class="n">log_unexpected_percept</span><span class="p">(</span><span class="n">percept</span><span class="p">)</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>        <span class="k">return</span> <span class="n">default_action</span>
+</code></pre></div></p>
+<p><strong>Sensor Validation</strong>: Verify percept validity
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_percept</span><span class="p">(</span><span class="n">percept</span><span class="p">):</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate percept before rule application.&quot;&quot;&quot;</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>    <span class="k">if</span> <span class="n">percept</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>        <span class="k">raise</span> <span class="n">SensorError</span><span class="p">(</span><span class="s2">&quot;Null percept received&quot;</span><span class="p">)</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">percept</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>        <span class="k">raise</span> <span class="n">SensorError</span><span class="p">(</span><span class="s2">&quot;Invalid percept format&quot;</span><span class="p">)</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>    <span class="k">return</span> <span class="kc">True</span>
+</code></pre></div></p>
+<h3 id="3-testing-and-validation">3. Testing and Validation</h3>
+<p><strong>Unit Testing</strong>: Test individual rules
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_vacuum_rules</span><span class="p">():</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>    <span class="n">rules</span> <span class="o">=</span> <span class="n">get_vacuum_rules</span><span class="p">()</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>    <span class="k">assert</span> <span class="n">rules</span><span class="p">[(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]</span> <span class="o">==</span> <span class="s2">&quot;SUCK&quot;</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>    <span class="k">assert</span> <span class="n">rules</span><span class="p">[(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]</span> <span class="o">==</span> <span class="s2">&quot;RIGHT&quot;</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    <span class="k">assert</span> <span class="n">rules</span><span class="p">[(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]</span> <span class="o">==</span> <span class="s2">&quot;SUCK&quot;</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>    <span class="k">assert</span> <span class="n">rules</span><span class="p">[(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)]</span> <span class="o">==</span> <span class="s2">&quot;LEFT&quot;</span>
+</code></pre></div></p>
+<p><strong>Integration Testing</strong>: Test agent behavior in realistic scenarios
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_agent_behavior</span><span class="p">():</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>    <span class="n">agent</span> <span class="o">=</span> <span class="n">VacuumReflexAgent</span><span class="p">()</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>    <span class="n">environment</span> <span class="o">=</span> <span class="n">VacuumWorld</span><span class="p">(</span><span class="n">dirt_probability</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>    <span class="n">total_score</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>    <span class="k">for</span> <span class="n">episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>        <span class="n">score</span> <span class="o">=</span> <span class="n">run_episode</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">environment</span><span class="p">)</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>        <span class="n">total_score</span> <span class="o">+=</span> <span class="n">score</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>    <span class="n">average_score</span> <span class="o">=</span> <span class="n">total_score</span> <span class="o">/</span> <span class="mi">100</span>
+<a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>    <span class="k">assert</span> <span class="n">average_score</span> <span class="o">&gt;</span> <span class="n">minimum_acceptable_score</span>
+</code></pre></div></p>
+<hr />
+<h2 id="exercises-and-extensions">Exercises and Extensions</h2>
+<h3 id="programming-exercises">Programming Exercises</h3>
+<ol>
+<li><strong>Implement a traffic light controller</strong> with emergency vehicle preemption</li>
+<li><strong>Design a stock trading agent</strong> with simple technical analysis rules</li>
+<li><strong>Create a chatbot</strong> with reflex-based intent classification</li>
+<li><strong>Build a game AI</strong> for Tic-Tac-Toe using only condition-action rules</li>
+</ol>
+<h3 id="theoretical-questions">Theoretical Questions</h3>
+<ol>
+<li><strong>Prove or disprove</strong>: A simple reflex agent can be optimal in fully observable, deterministic environments</li>
+<li><strong>Analyze the computational complexity</strong> of rule compilation for large rule sets</li>
+<li><strong>Design a formal specification</strong> for verifying reflex agent safety properties</li>
+<li><strong>Compare the expressiveness</strong> of different rule representation formats</li>
+</ol>
+<h3 id="research-directions">Research Directions</h3>
+<ol>
+<li><strong>Machine learning for rule discovery</strong>: Can we automatically learn reflex rules from demonstrations?</li>
+<li><strong>Adaptive rule priorities</strong>: How can rule priorities change based on context?</li>
+<li><strong>Distributed reflex systems</strong>: Coordinating multiple reflex agents without central control</li>
+<li><strong>Quantum reflex agents</strong>: Leveraging quantum superposition for parallel rule evaluation</li>
+</ol>
+<hr />
+<h2 id="summary-and-connections">Summary and Connections</h2>
+<p>Simple reflex agents, despite their limitations, provide crucial insights into the foundations of intelligent behavior. They demonstrate that <strong>intelligent-seeming behavior can emerge from simple rules</strong>, a principle that scales to modern AI systems where complex behaviors emerge from combinations of simple components.</p>
+<p><strong>Key Takeaways</strong>:</p>
+<ol>
+<li><strong>Simplicity has value</strong>: In well-defined, stable environments, simple solutions often outperform complex ones</li>
+<li><strong>Foundational understanding</strong>: Grasping reflex agents illuminates the limitations that drive more sophisticated architectures</li>
+<li><strong>Modern relevance</strong>: Reflex components remain valuable in hybrid systems, safety-critical applications, and resource-constrained environments</li>
+<li><strong>Design principles</strong>: Rules for transparency, robustness, and maintainability apply across AI system complexity levels</li>
+</ol>
+<p>The journey from simple reflex agents to modern LLM-based systems illustrates the evolution of AI architectures, each addressing specific limitations of previous approaches while introducing new capabilities and complexities.</p>
+<hr />
+<h2 id="q-a">Q &amp; A</h2>
+<p><strong>Q: Why do simple reflex agents violate the separation of concerns principle?</strong><br />
+<strong>A:</strong> Knowledge representation (rules) and control logic (decision function) are tightly coupled in the rule table. This makes maintenance difficult because domain knowledge changes require modifying the control structure, and vice versa. Modern architectures separate knowledge bases from inference engines to improve modularity.</p>
+<p><strong>Q: How can a reflex agent be extended to cope with unseen percepts?</strong><br />
+<strong>A:</strong> Several approaches exist: (1) Add default rules with safe fallback behaviors, (2) Upgrade to model-based reflex by maintaining state, (3) Implement hierarchical rules with catch-all patterns, (4) Use similarity-based matching for near-miss percepts, or (5) Integrate with learning mechanisms to acquire new rules online.</p>
+<p><strong>Q: Can simple reflex agents exhibit optimal behavior?</strong><br />
+<strong>A:</strong> Yes, in environments that are fully observable, deterministic, and where the optimal policy is stateless (Markovian). For example, a thermostat can be optimal if it only needs current temperature to make heating decisions. However, most real-world environments require state memory for optimal behavior.</p>
+<p><strong>Q: How do reflex agents handle real-time constraints?</strong><br />
+<strong>A:</strong> Their O(1) decision time makes them naturally suited for hard real-time systems. Unlike planning-based agents that may exceed time deadlines during complex reasoning, reflex agents provide predictable, bounded response times essential for safety-critical applications.</p>
+<p><strong>Q: What is the relationship between reflex agents and reactive programming paradigms?</strong><br />
+<strong>A:</strong> Reflex agents embody reactive programming principles: responding to events (percepts) without internal state management. Modern reactive systems like event-driven architectures and functional reactive programming extend these ideas to distributed systems and user interfaces.</p>
+<p><strong>Q: How do we validate that a reflex agent's rule set is complete and consistent?</strong><br />
+<strong>A:</strong> Formal verification techniques can be applied: (1) Completeness checking ensures all possible percepts have corresponding rules, (2) Consistency analysis detects conflicting rules, (3) Safety verification proves that unsafe states are unreachable, and (4) Liveness verification ensures progress toward goals. Model checking tools can automate these analyses for finite state spaces.</p>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../00_foundations/linear_algebra/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Linear Algebra">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Linear Algebra
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../model_based_reflex_agent/" class="md-footer__link md-footer__link--next" aria-label="Next: Model-Based Reflex Agents">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Model-Based Reflex Agents
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.footer", "content.code.copy", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+        <script src="../../javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>
